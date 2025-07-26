@@ -88,8 +88,8 @@ ZeroDay/
      - `complaints.html` for hostel complaints
 
 2. **Login credentials:**
-   - **Students:** Any username (3-20 chars) + password (6+ chars)
-   - **Admins:** Any username (3-20 chars) + password (6+ chars)
+   - **Students:** Any username (3-20 chars) + password (6+ chars) username:kabil  password:ka1234
+   - **Admins:** Any username (3-20 chars) + password (6+ chars) username:admin  password:ad1234
    - Select appropriate role during login
 
 3. **Navigation:**
