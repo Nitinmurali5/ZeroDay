@@ -1,0 +1,1197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mini Timetable Scheduler</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            color: white;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        /* Dashboard */
+        .dashboard {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-top: 20px;
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #eee;
+        }
+
+        .dashboard-header h2 {
+            color: #333;
+            font-size: 1.8rem;
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        button.secondary {
+            background: #f8f9fa;
+            color: #495057;
+            border: 1px solid #ddd;
+        }
+
+        button.delete-btn {
+            background: #dc3545;
+        }
+
+        /* Timetable Styles */
+        .timetable-container {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
+            border: 1px solid #dee2e6;
+            overflow-x: auto;
+        }
+
+        .timetable-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .timetable-header h3 {
+            margin: 0;
+            color: #495057;
+            font-size: 1.5rem;
+        }
+
+        .nav-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #667eea;
+            color: white;
+            border: none;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .nav-btn:hover {
+            background: #5a6fd8;
+            transform: scale(1.1);
+        }
+
+        .timetable-grid {
+            display: grid;
+            grid-template-columns: 80px repeat(5, 1fr);
+            gap: 1px;
+            background: #dee2e6;
+            border-radius: 8px;
+            overflow: hidden;
+            min-width: 900px;
+        }
+
+        .time-header, .day-header {
+            background: #495057;
+            color: white;
+            padding: 10px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .time-slot {
+            background: #f8f9fa;
+            padding: 10px;
+            text-align: center;
+            font-weight: 500;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .timetable-cell {
+            background: white;
+            min-height: 80px;
+            padding: 8px;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border-bottom: 1px solid #dee2e6;
+            border-right: 1px solid #dee2e6;
+        }
+
+        .timetable-cell:hover {
+            background: #f0f2f5;
+        }
+
+        .timetable-cell.empty {
+            background: #f8f9fa;
+        }
+
+        .timetable-event {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 6px;
+            padding: 8px;
+            margin-bottom: 5px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            border-left: 4px solid rgba(255,255,255,0.5);
+        }
+
+        .timetable-event:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .event-title {
+            font-weight: 600;
+            margin-bottom: 3px;
+        }
+
+        .event-details {
+            font-size: 10px;
+            opacity: 0.9;
+        }
+
+        .event-actions {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            display: none;
+        }
+
+        .timetable-event:hover .event-actions {
+            display: flex;
+            gap: 5px;
+        }
+
+        .event-actions button {
+            width: 20px;
+            height: 20px;
+            padding: 0;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 500px;
+            position: relative;
+            transform: translateY(20px);
+            transition: transform 0.3s ease;
+        }
+
+        .modal-overlay.active .modal {
+            transform: translateY(0);
+        }
+
+        .modal-header {
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h3 {
+            color: #333;
+            font-size: 1.5rem;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .color-picker {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .color-option {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.2s ease;
+        }
+
+        .color-option.selected {
+            border-color: #333;
+            transform: scale(1.1);
+        }
+
+        .modal-footer {
+            padding: 15px 20px;
+            border-top: 1px solid #eee;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        /* Event Categories */
+        .event-category-1 { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .event-category-2 { background: linear-gradient(135deg, #4CAF50 0%, #8BC34A 100%); }
+        .event-category-3 { background: linear-gradient(135deg, #FF9800 0%, #FF5722 100%); }
+        .event-category-4 { background: linear-gradient(135deg, #9C27B0 0%, #673AB7 100%); }
+        .event-category-5 { background: linear-gradient(135deg, #2196F3 0%, #03A9F4 100%); }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            header h1 {
+                font-size: 2rem;
+            }
+            
+            .dashboard {
+                padding: 20px;
+            }
+            
+            .dashboard-header {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+            
+            .controls {
+                flex-direction: column;
+            }
+            
+            .timetable-grid {
+                min-width: 700px;
+            }
+            
+            .time-header, .day-header, .time-slot {
+                font-size: 12px;
+                padding: 8px 5px;
+            }
+            
+            .timetable-event {
+                padding: 5px;
+                font-size: 10px;
+            }
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #6c757d;
+        }
+
+        .empty-state h4 {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Mini Timetable Scheduler</h1>
+            <p>Manage your weekly class schedule efficiently</p>
+        </header>
+
+        <div class="dashboard">
+            <div class="dashboard-header">
+                <h2>My Weekly Schedule</h2>
+                <div>
+                    <button class="secondary"><i class="fas fa-sync-alt"></i> Refresh</button>
+                    <button id="addEventBtn"><i class="fas fa-plus"></i> Add Class</button>
+                </div>
+            </div>
+
+            <div class="controls">
+                <button class="secondary"><i class="fas fa-filter"></i> Filter by Course</button>
+                <button class="secondary"><i class="fas fa-download"></i> Export Timetable</button>
+                <button class="secondary"><i class="fas fa-print"></i> Print Schedule</button>
+            </div>
+
+            <div class="timetable-container">
+                <div class="timetable-header">
+                    <h3>Week of June 10 - June 16, 2024</h3>
+                    <div>
+                        <button class="nav-btn"><i class="fas fa-chevron-left"></i></button>
+                        <button class="nav-btn"><i class="fas fa-chevron-right"></i></button>
+                    </div>
+                </div>
+
+                <div class="timetable-grid">
+                    <!-- Time Column Header -->
+                    <div class="time-header">Time</div>
+                    <div class="day-header">Monday</div>
+                    <div class="day-header">Tuesday</div>
+                    <div class="day-header">Wednesday</div>
+                    <div class="day-header">Thursday</div>
+                    <div class="day-header">Friday</div>
+
+                    <!-- Time Slots -->
+                    <div class="time-slot">8:00 AM</div>
+                    <div class="timetable-cell empty"></div>
+                    <div class="timetable-cell">
+                        <div class="timetable-event event-category-1">
+                            <div class="event-title">Mathematics</div>
+                            <div class="event-details">Room 304 • Prof. Johnson</div>
+                            <div class="event-actions">
+                                <button class="edit-btn"><i class="fas fa-edit"></i></button>
+                                <button class="delete-btn"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="timetable-cell empty"></div>
+                    <div class="timetable-cell empty"></div>
+                    <div class="timetable-cell">
+                        <div class="timetable-event event-category-3">
+                            <div class="event-title">Physics Lab</div>
+                            <div class="event-details">Science Bldg • Dr. Roberts</div>
+                            <div class="event-actions">
+                                <button class="edit-btn"><i class="fas fa-edit"></i></button>
+                                <button class="delete-btn"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="time-slot">9:00 AM</div>
+                    <div class="timetable-cell">
+                        <div class="timetable-event event-category-2">
+                            <div class="event-title">Computer Science</div>
+                            <div class="event-details">Lab 102 • Dr. Williams</div>
+                            <div class="event-actions">
+                                <button class="edit-btn"><i class="fas fa-edit"></i></button>
+                                <button class="delete-btn"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="timetable-cell empty"></div>
+                    <div class="timetable-cell">
+                        <div class="timetable-event event-category-4">
+                            <div class="event-title">Literature</div>
+                            <div class="event-details">Room 201 • Prof. Davis</div>
+                            <div class="event-actions">
+                                <button class="edit-btn"><i class="fas fa-edit"></i></button>
+                                <button class="delete-btn"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="timetable-cell empty"></div>
+                    <div class="timetable-cell">
+                        <div class="timetable-event event-category-5">
+                            <div class="event-title">History</div>
+                            <div class="event-details">Room 105 • Dr. Thompson</div>
+                            <div class="event-actions">
+                                <button class="edit-btn"><i class="fas fa-edit"></i></button>
+                                <button class="delete-btn"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="time-slot">10:00 AM</div>
+                    <div class="timetable-cell empty"></div>
+                    <div class="timetable-cell">
+                        <div class="timetable-event event-category-3">
+                            <div class="event-title">Physics</div>
+                            <div class="event-details">Room 302 • Dr. Roberts</div>
+                            <div class="event-actions">
+                                <button class="edit-btn"><i class="fas fa-edit"></i></button>
+                                <button class="delete-btn"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="timetable-cell empty"></div>
+                    <div class="timetable-cell">
+                        <div class="timetable-event event-category-1">
+                            <div class="event-title">Calculus</div>
+                            <div class="event-details">Room 304 • Prof. Johnson</div>
+                            <div class="event-actions">
+                                <button class="edit-btn"><i class="fas fa-edit"></i></button>
+                                <button class="delete-btn"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="timetable-cell empty"></div>
+
+                    <div class="time-slot">11:00 AM</div>
+                    <div class="timetable-cell">
+                        <div class="timetable-event event-category-5">
+                            <div class="event-title">Art History</div>
+                            <div class="event-details">Gallery • Prof. Miller</div>
+                            <div class="event-actions">
+                                <button class="edit-btn"><i class="fas fa-edit"></i></button>
+                                <button class="delete-btn"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="timetable-cell empty"></div>
+                    <div class="timetable-cell">
+                        <div class="timetable-event event-category-4">
+                            <div class="event-title">Creative Writing</div>
+                            <div class="event-details">Room 210 • Dr. Parker</div>
+                            <div class="event-actions">
+                                <button class="edit-btn"><i class="fas fa-edit"></i></button>
+                                <button class="delete-btn"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="timetable-cell empty"></div>
+                    <div class="timetable-cell">
+                        <div class="timetable-event event-category-2">
+                            <div class="event-title">Database Systems</div>
+                            <div class="event-details">Lab 105 • Prof. Chen</div>
+                            <div class="event-actions">
+                                <button class="edit-btn"><i class="fas fa-edit"></i></button>
+                                <button class="delete-btn"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="time-slot">12:00 PM</div>
+                    <div class="timetable-cell empty"></div>
+                    <div class="timetable-cell empty"></div>
+                    <div class="timetable-cell empty"></div>
+                    <div class="timetable-cell empty"></div>
+                    <div class="timetable-cell empty"></div>
+
+                    <div class="time-slot">1:00 PM</div>
+                    <div class="timetable-cell">
+                        <div class="timetable-event event-category-1">
+                            <div class="event-title">Algebra</div>
+                            <div class="event-details">Room 305 • Dr. Wilson</div>
+                            <div class="event-actions">
+                                <button class="edit-btn"><i class="fas fa-edit"></i></button>
+                                <button class="delete-btn"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="timetable-cell empty"></div>
+                    <div class="timetable-cell">
+                        <div class="timetable-event event-category-3">
+                            <div class="event-title">Chemistry</div>
+                            <div class="event-details">Lab 201 • Prof. Adams</div>
+                            <div class="event-actions">
+                                <button class="edit-btn"><i class="fas fa-edit"></i></button>
+                                <button class="delete-btn"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="timetable-cell empty"></div>
+                    <div class="timetable-cell">
+                        <div class="timetable-event event-category-5">
+                            <div class="event-title">Sociology</div>
+                            <div class="event-details">Room 108 • Dr. Taylor</div>
+                            <div class="event-actions">
+                                <button class="edit-btn"><i class="fas fa-edit"></i></button>
+                                <button class="delete-btn"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="time-slot">2:00 PM</div>
+                    <div class="timetable-cell empty"></div>
+                    <div class="timetable-cell">
+                        <div class="timetable-event event-category-2">
+                            <div class="event-title">Web Development</div>
+                            <div class="event-details">Lab 103 • Prof. Rodriguez</div>
+                            <div class="event-actions">
+                                <button class="edit-btn"><i class="fas fa-edit"></i></button>
+                                <button class="delete-btn"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="timetable-cell empty"></div>
+                    <div class="timetable-cell">
+                        <div class="timetable-event event-category-4">
+                            <div class="event-title">Linguistics</div>
+                            <div class="event-details">Room 205 • Dr. Brown</div>
+                            <div class="event-actions">
+                                <button class="edit-btn"><i class="fas fa-edit"></i></button>
+                                <button class="delete-btn"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="timetable-cell empty"></div>
+
+                    <div class="time-slot">3:00 PM</div>
+                    <div class="timetable-cell">
+                        <div class="timetable-event event-category-5">
+                            <div class="event-title">Psychology</div>
+                            <div class="event-details">Room 110 • Dr. Clark</div>
+                            <div class="event-actions">
+                                <button class="edit-btn"><i class="fas fa-edit"></i></button>
+                                <button class="delete-btn"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="timetable-cell empty"></div>
+                    <div class="timetable-cell">
+                        <div class="timetable-event event-category-3">
+                            <div class="event-title">Biology</div>
+                            <div class="event-details">Lab 301 • Dr. Evans</div>
+                            <div class="event-actions">
+                                <button class="edit-btn"><i class="fas fa-edit"></i></button>
+                                <button class="delete-btn"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="timetable-cell empty"></div>
+                    <div class="timetable-cell">
+                        <div class="timetable-event event-category-1">
+                            <div class="event-title">Statistics</div>
+                            <div class="event-details">Room 307 • Prof. Lee</div>
+                            <div class="event-actions">
+                                <button class="edit-btn"><i class="fas fa-edit"></i></button>
+                                <button class="delete-btn"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add/Edit Event Modal -->
+    <div class="modal-overlay" id="eventModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="modalTitle">Add New Class</h3>
+                <button class="close-btn" id="closeModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="eventForm">
+                    <div class="form-group">
+                        <label for="courseName">Course Name</label>
+                        <input type="text" id="courseName" placeholder="Enter course name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="dayOfWeek">Day of Week</label>
+                        <select id="dayOfWeek" required>
+                            <option value="">Select day</option>
+                            <option value="monday">Monday</option>
+                            <option value="tuesday">Tuesday</option>
+                            <option value="wednesday">Wednesday</option>
+                            <option value="thursday">Thursday</option>
+                            <option value="friday">Friday</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="startTime">Start Time</label>
+                        <select id="startTime" required>
+                            <option value="">Select start time</option>
+                            <option value="8:00">8:00 AM</option>
+                            <option value="9:00">9:00 AM</option>
+                            <option value="10:00">10:00 AM</option>
+                            <option value="11:00">11:00 AM</option>
+                            <option value="12:00">12:00 PM</option>
+                            <option value="13:00">1:00 PM</option>
+                            <option value="14:00">2:00 PM</option>
+                            <option value="15:00">3:00 PM</option>
+                            <option value="16:00">4:00 PM</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="endTime">End Time</label>
+                        <select id="endTime" required>
+                            <option value="">Select end time</option>
+                            <option value="9:00">9:00 AM</option>
+                            <option value="10:00">10:00 AM</option>
+                            <option value="11:00">11:00 AM</option>
+                            <option value="12:00">12:00 PM</option>
+                            <option value="13:00">1:00 PM</option>
+                            <option value="14:00">2:00 PM</option>
+                            <option value="15:00">3:00 PM</option>
+                            <option value="16:00">4:00 PM</option>
+                            <option value="17:00">5:00 PM</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="location">Location</label>
+                        <input type="text" id="location" placeholder="Enter location" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="instructor">Instructor</label>
+                        <input type="text" id="instructor" placeholder="Enter instructor name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Color Coding</label>
+                        <div class="color-picker">
+                            <div class="color-option selected" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);" data-color="1"></div>
+                            <div class="color-option" style="background: linear-gradient(135deg, #4CAF50 0%, #8BC34A 100%);" data-color="2"></div>
+                            <div class="color-option" style="background: linear-gradient(135deg, #FF9800 0%, #FF5722 100%);" data-color="3"></div>
+                            <div class="color-option" style="background: linear-gradient(135deg, #9C27B0 0%, #673AB7 100%);" data-color="4"></div>
+                            <div class="color-option" style="background: linear-gradient(135deg, #2196F3 0%, #03A9F4 100%);" data-color="5"></div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="secondary" id="cancelBtn">Cancel</button>
+                <button id="saveEventBtn">Save Class</button>
+                <button id="quickAddBtn" style="background: #28a745;">Quick Add</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let events = [];
+        let currentWeek = new Date();
+        let editingEventId = null;
+        
+        // Time slots configuration
+        const timeSlots = ['8:00', '9:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00'];
+        const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'];
+        
+        // DOM elements
+        const eventModal = document.getElementById('eventModal');
+        const addEventBtn = document.getElementById('addEventBtn');
+        const closeModal = document.getElementById('closeModal');
+        const cancelBtn = document.getElementById('cancelBtn');
+        const saveEventBtn = document.getElementById('saveEventBtn');
+        const colorOptions = document.querySelectorAll('.color-option');
+        const timetableGrid = document.querySelector('.timetable-grid');
+        
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            loadEvents();
+            renderTimetable();
+            setupEventListeners();
+            updateWeekDisplay();
+        });
+        
+        // Load events from localStorage
+        function loadEvents() {
+            const savedEvents = localStorage.getItem('timetableEvents');
+            if (savedEvents) {
+                events = JSON.parse(savedEvents);
+            }
+        }
+        
+        // Save events to localStorage
+        function saveEvents() {
+            localStorage.setItem('timetableEvents', JSON.stringify(events));
+        }
+        
+        // Generate unique ID for events
+        function generateId() {
+            return Date.now().toString(36) + Math.random().toString(36).substr(2);
+        }
+        
+        // Setup all event listeners
+        function setupEventListeners() {
+            // Modal functionality
+            addEventBtn.addEventListener('click', () => {
+                openModal('add');
+            });
+            
+            closeModal.addEventListener('click', closeEventModal);
+            cancelBtn.addEventListener('click', closeEventModal);
+            saveEventBtn.addEventListener('click', saveEvent);
+            
+            // Quick Add button
+            const quickAddBtn = document.getElementById('quickAddBtn');
+            if (quickAddBtn) {
+                quickAddBtn.addEventListener('click', quickAddEvent);
+            }
+            
+            // Color selection
+            colorOptions.forEach(option => {
+                option.addEventListener('click', () => {
+                    colorOptions.forEach(opt => opt.classList.remove('selected'));
+                    option.classList.add('selected');
+                });
+            });
+            
+            // Week navigation
+            document.querySelectorAll('.nav-btn').forEach((btn, index) => {
+                btn.addEventListener('click', () => {
+                    if (index === 0) { // Previous week
+                        currentWeek.setDate(currentWeek.getDate() - 7);
+                    } else { // Next week
+                        currentWeek.setDate(currentWeek.getDate() + 7);
+                    }
+                    updateWeekDisplay();
+                });
+            });
+            
+            // Control buttons
+            document.querySelector('.controls button:nth-child(1)').addEventListener('click', filterByCourse);
+            document.querySelector('.controls button:nth-child(2)').addEventListener('click', exportTimetable);
+            document.querySelector('.controls button:nth-child(3)').addEventListener('click', printSchedule);
+            
+            // Refresh button
+            document.querySelector('.dashboard-header button:first-child').addEventListener('click', () => {
+                renderTimetable();
+            });
+        }
+        
+        // Open modal for add or edit
+        function openModal(mode, eventData = null) {
+            eventModal.classList.add('active');
+            
+            if (mode === 'add') {
+                document.getElementById('modalTitle').textContent = 'Add New Class';
+                document.getElementById('eventForm').reset();
+                colorOptions[0].classList.add('selected');
+                editingEventId = null;
+            } else if (mode === 'edit' && eventData) {
+                document.getElementById('modalTitle').textContent = 'Edit Class';
+                populateForm(eventData);
+                editingEventId = eventData.id;
+            }
+        }
+        
+        // Populate form with event data
+        function populateForm(eventData) {
+            document.getElementById('courseName').value = eventData.courseName;
+            document.getElementById('dayOfWeek').value = eventData.day;
+            document.getElementById('startTime').value = eventData.startTime;
+            document.getElementById('endTime').value = eventData.endTime;
+            document.getElementById('location').value = eventData.location;
+            document.getElementById('instructor').value = eventData.instructor;
+            
+            // Select the correct color
+            colorOptions.forEach(option => {
+                option.classList.remove('selected');
+                if (option.dataset.color === eventData.color) {
+                    option.classList.add('selected');
+                }
+            });
+        }
+        
+        // Close modal
+        function closeEventModal() {
+            eventModal.classList.remove('active');
+            document.getElementById('eventForm').reset();
+            editingEventId = null;
+        }
+        
+        // Save event
+        function saveEvent() {
+            const form = document.getElementById('eventForm');
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+            
+            const selectedColor = document.querySelector('.color-option.selected');
+            if (!selectedColor) {
+                alert('Please select a color for the class.');
+                return;
+            }
+            
+            const eventData = {
+                id: editingEventId || generateId(),
+                courseName: document.getElementById('courseName').value.trim(),
+                day: document.getElementById('dayOfWeek').value,
+                startTime: document.getElementById('startTime').value,
+                endTime: document.getElementById('endTime').value,
+                location: document.getElementById('location').value.trim(),
+                instructor: document.getElementById('instructor').value.trim(),
+                color: selectedColor.dataset.color
+            };
+            
+            // Validate that all fields are filled
+            if (!eventData.courseName || !eventData.day || !eventData.startTime || 
+                !eventData.endTime || !eventData.location || !eventData.instructor) {
+                alert('Please fill in all fields.');
+                return;
+            }
+            
+            console.log('Saving event:', eventData);
+            
+            if (editingEventId) {
+                // Update existing event
+                const index = events.findIndex(e => e.id === editingEventId);
+                if (index !== -1) {
+                    events[index] = eventData;
+                    console.log('Updated existing event');
+                }
+            } else {
+                // Add new event
+                events.push(eventData);
+                console.log('Added new event. Total events:', events.length);
+            }
+            
+            saveEvents();
+            renderTimetable();
+            closeEventModal();
+            
+            // Show success message
+            alert('Class successfully ' + (editingEventId ? 'updated' : 'added') + '!');
+        }
+        
+        // Quick add event (simpler method)
+        function quickAddEvent() {
+            const selectedColor = document.querySelector('.color-option.selected');
+            if (!selectedColor) {
+                alert('Please select a color for the class.');
+                return;
+            }
+            
+            const courseName = document.getElementById('courseName').value.trim();
+            const day = document.getElementById('dayOfWeek').value;
+            const startTime = document.getElementById('startTime').value;
+            const endTime = document.getElementById('endTime').value;
+            const location = document.getElementById('location').value.trim();
+            const instructor = document.getElementById('instructor').value.trim();
+            
+            // Validate that all fields are filled
+            if (!courseName || !day || !startTime || !endTime || !location || !instructor) {
+                alert('Please fill in all fields.');
+                return;
+            }
+            
+            const eventData = {
+                id: generateId(),
+                courseName: courseName,
+                day: day,
+                startTime: startTime,
+                endTime: endTime,
+                location: location,
+                instructor: instructor,
+                color: selectedColor.dataset.color
+            };
+            
+            // Add to events array
+            events.push(eventData);
+            console.log('Quick added event:', eventData);
+            console.log('Total events:', events.length);
+            
+            // Save and refresh
+            saveEvents();
+            closeEventModal();
+            
+            // Force refresh the page to show the new event
+            setTimeout(() => {
+                location.reload();
+            }, 100);
+        }
+        
+        // Render the timetable
+        function renderTimetable() {
+            // Clear existing events (keep headers and time slots)
+            const cells = document.querySelectorAll('.timetable-cell');
+            cells.forEach(cell => {
+                cell.innerHTML = '';
+                cell.className = 'timetable-cell empty';
+            });
+            
+            // Add events to the timetable
+            events.forEach(event => {
+                const cell = findCell(event.day, event.startTime);
+                if (cell) {
+                    cell.classList.remove('empty');
+                    cell.appendChild(createEventElement(event));
+                }
+            });
+            
+            // Re-attach event listeners to new elements
+            attachEventListeners();
+        }
+        
+        // Find the correct cell for an event
+        function findCell(day, time) {
+            const dayIndex = days.indexOf(day);
+            const timeIndex = timeSlots.indexOf(time);
+            
+            if (dayIndex === -1 || timeIndex === -1) {
+                console.log('Invalid day or time:', day, time);
+                return null;
+            }
+            
+            // Get all timetable cells (excluding headers and time slots)
+            const cells = document.querySelectorAll('.timetable-cell');
+            
+            // Calculate the correct cell index
+            // Grid structure: 6 columns (time + 5 days), multiple rows
+            // Each row has: 1 time slot + 5 day cells
+            const cellIndex = timeIndex * 5 + dayIndex;
+            
+            if (cellIndex >= 0 && cellIndex < cells.length) {
+                return cells[cellIndex];
+            }
+            
+            console.log('Cell not found for:', day, time, 'index:', cellIndex);
+            return null;
+        }
+        
+        // Create event element
+        function createEventElement(event) {
+            const eventDiv = document.createElement('div');
+            eventDiv.className = `timetable-event event-category-${event.color}`;
+            eventDiv.dataset.eventId = event.id;
+            
+            eventDiv.innerHTML = `
+                <div class="event-title">${event.courseName}</div>
+                <div class="event-details">${event.location} • ${event.instructor}</div>
+                <div class="event-actions">
+                    <button class="edit-btn"><i class="fas fa-edit"></i></button>
+                    <button class="delete-btn"><i class="fas fa-trash"></i></button>
+                </div>
+            `;
+            
+            return eventDiv;
+        }
+        
+        // Attach event listeners to dynamic elements
+        function attachEventListeners() {
+            // Delete buttons
+            document.querySelectorAll('.delete-btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const eventId = this.closest('.timetable-event').dataset.eventId;
+                    if (confirm('Are you sure you want to delete this class?')) {
+                        deleteEvent(eventId);
+                    }
+                });
+            });
+            
+            // Edit buttons
+            document.querySelectorAll('.edit-btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const eventId = this.closest('.timetable-event').dataset.eventId;
+                    const eventData = events.find(e => e.id === eventId);
+                    if (eventData) {
+                        openModal('edit', eventData);
+                    }
+                });
+            });
+            
+            // Empty cells
+            document.querySelectorAll('.timetable-cell.empty').forEach(cell => {
+                cell.addEventListener('click', function() {
+                    openModal('add');
+                });
+            });
+        }
+        
+        // Delete event
+        function deleteEvent(eventId) {
+            events = events.filter(e => e.id !== eventId);
+            saveEvents();
+            renderTimetable();
+        }
+        
+        // Update week display
+        function updateWeekDisplay() {
+            const weekStart = new Date(currentWeek);
+            weekStart.setDate(currentWeek.getDate() - currentWeek.getDay() + 1); // Monday
+            const weekEnd = new Date(weekStart);
+            weekEnd.setDate(weekStart.getDate() + 4); // Friday
+            
+            const options = { month: 'long', day: 'numeric', year: 'numeric' };
+            const startStr = weekStart.toLocaleDateString('en-US', options);
+            const endStr = weekEnd.toLocaleDateString('en-US', options);
+            
+            document.querySelector('.timetable-header h3').textContent = 
+                `Week of ${startStr} - ${endStr}`;
+        }
+        
+        // Filter by course
+        function filterByCourse() {
+            const course = prompt('Enter course name to filter by:');
+            if (course) {
+                const filteredEvents = events.filter(e => 
+                    e.courseName.toLowerCase().includes(course.toLowerCase())
+                );
+                
+                // Temporarily show only filtered events
+                const originalEvents = [...events];
+                events = filteredEvents;
+                renderTimetable();
+                
+                // Restore after 5 seconds
+                setTimeout(() => {
+                    events = originalEvents;
+                    renderTimetable();
+                }, 5000);
+            }
+        }
+        
+        // Export timetable
+        function exportTimetable() {
+            const data = {
+                events: events,
+                exportDate: new Date().toISOString(),
+                weekStart: currentWeek.toISOString()
+            };
+            
+            const blob = new Blob([JSON.stringify(data, null, 2)], 
+                { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'timetable-export.json';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+        
+        // Print schedule
+        function printSchedule() {
+            window.print();
+        }
+        
+        // Close modal when clicking outside
+        eventModal.addEventListener('click', function(e) {
+            if (e.target === eventModal) {
+                closeEventModal();
+            }
+        });
+        
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && eventModal.classList.contains('active')) {
+                closeEventModal();
+            }
+            if (e.ctrlKey && e.key === 'n') {
+                e.preventDefault();
+                openModal('add');
+            }
+        });
+    </script>
+</body>
+</html>

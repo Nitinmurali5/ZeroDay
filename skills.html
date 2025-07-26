@@ -1,0 +1,2816 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkillShare - Peer Learning Platform</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            color: white;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* Dashboard */
+        .dashboard {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #eee;
+        }
+
+        .dashboard-header h2 {
+            color: #333;
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .user-info h3 {
+            margin-bottom: 5px;
+        }
+
+        .user-info p {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .logout-btn {
+            width: auto;
+            padding: 8px 20px;
+            background: #dc3545;
+            font-size: 14px;
+            border-radius: 8px;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: #c82333;
+            transform: translateY(-2px);
+        }
+
+        /* Main Content */
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 20px;
+        }
+
+        @media (max-width: 900px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .panel {
+            background: #f8f9fa;
+            border-radius: 10px;
+            border: 1px solid #dee2e6;
+            padding: 25px;
+        }
+
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #dee2e6;
+        }
+
+        .panel-header h3 {
+            color: #495057;
+            font-size: 1.4rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .panel-buttons {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .filter-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .filter-controls select,
+        .filter-controls input {
+            padding: 8px 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+        
+        .filter-controls select:focus,
+        .filter-controls input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .btn {
+            padding: 8px 16px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid #667eea;
+            color: #667eea;
+        }
+
+        .btn-outline:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        /* Skills List */
+        .skills-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .skill-card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 20px;
+            transition: all 0.3s ease;
+            border-left: 4px solid #667eea;
+        }
+
+        .skill-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+
+        .skill-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .skill-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .skill-category {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .skill-details {
+            color: #555;
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+
+        .skill-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 15px;
+        }
+
+        .tutor-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tutor-avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .tutor-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .skill-rating {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: #ffc107;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .skill-rating:hover {
+            transform: scale(1.05);
+            filter: brightness(1.2);
+        }
+        
+        /* Ratings Popup Modal */
+        .ratings-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+        }
+        
+        .ratings-modal.active {
+            display: flex;
+        }
+        
+        .ratings-popup {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            position: relative;
+            animation: modalSlideIn 0.3s ease-out;
+        }
+        
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .ratings-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #eee;
+        }
+        
+        .ratings-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #666;
+            padding: 5px;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+        
+        .close-modal:hover {
+            background: #f0f0f0;
+            color: #333;
+        }
+        
+        .rating-summary {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+        
+        .overall-rating {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 0.5rem;
+        }
+        
+        .rating-stars {
+            font-size: 1.5rem;
+            color: #ffc107;
+            margin-bottom: 0.5rem;
+        }
+        
+        .rating-count {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .individual-ratings {
+            margin-top: 1.5rem;
+        }
+        
+        .rating-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .rating-item:last-child {
+            border-bottom: none;
+        }
+        
+        .reviewer-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .rating-content {
+            flex: 1;
+        }
+        
+        .reviewer-name {
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+        }
+        
+        .rating-stars-small {
+            color: #ffc107;
+            margin-bottom: 0.5rem;
+        }
+        
+        .rating-comment {
+            color: #555;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+        
+        .rating-date {
+            color: #999;
+            font-size: 0.8rem;
+            margin-top: 0.3rem;
+        }
+
+        .skill-actions {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 15px;
+            gap: 10px;
+        }
+
+        /* My Skills */
+        .my-skills-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .my-skill {
+            background: white;
+            border-radius: 50px;
+            padding: 8px 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .remove-skill {
+            background: #f8d7da;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #721c24;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .remove-skill:hover {
+            background: #f5c6cb;
+            transform: scale(1.1);
+        }
+
+        .add-skill-form {
+            margin-top: 25px;
+            padding-top: 25px;
+            border-top: 2px dashed #dee2e6;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #555;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        /* Bookings Section */
+        .bookings-container {
+            margin-top: 30px;
+        }
+
+        .booking-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            border-left: 4px solid #28a745;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .booking-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .booking-info h4 {
+            margin-bottom: 5px;
+        }
+
+        .booking-details {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .booking-status {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-confirmed {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-completed {
+            background: #e2e3e5;
+            color: #383d41;
+        }
+
+        .status-cancelled {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .status-published {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        /* Live Classes Section */
+        .live-classes-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .live-class-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            border-left: 4px solid #667eea;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .live-class-info {
+            flex: 1;
+        }
+
+        .live-class-info h4 {
+            margin-bottom: 10px;
+            color: #333;
+            font-size: 1.2rem;
+        }
+
+        .live-class-details {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .live-class-details p {
+            color: #666;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .live-class-details i {
+            width: 16px;
+            color: #667eea;
+        }
+
+        .live-class-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .live-class-status {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-live {
+            background: #d4edda;
+            color: #155724;
+            animation: pulse 2s infinite;
+        }
+
+        .status-scheduled {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-ended {
+            background: #e2e3e5;
+            color: #383d41;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+
+        /* Popup Messages */
+        .popup-message {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            border-radius: 8px;
+            padding: 15px 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            border-left: 4px solid #28a745;
+            z-index: 2000;
+            transform: translateX(400px);
+            transition: transform 0.3s ease-out;
+            max-width: 350px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .popup-message.show {
+            transform: translateX(0);
+        }
+
+        .popup-message.success {
+            border-left-color: #28a745;
+        }
+
+        .popup-message.error {
+            border-left-color: #dc3545;
+        }
+
+        .popup-message.warning {
+            border-left-color: #ffc107;
+        }
+
+        .popup-message.info {
+            border-left-color: #17a2b8;
+        }
+
+        .popup-message i {
+            font-size: 1.2rem;
+        }
+
+        .popup-message.success i {
+            color: #28a745;
+        }
+
+        .popup-message.error i {
+            color: #dc3545;
+        }
+
+        .popup-message.warning i {
+            color: #ffc107;
+        }
+
+        .popup-message.info i {
+            color: #17a2b8;
+        }
+
+        .popup-message-content {
+            flex: 1;
+        }
+
+        .popup-message-title {
+            font-weight: 600;
+            margin-bottom: 2px;
+            font-size: 0.9rem;
+        }
+
+        .popup-message-text {
+            font-size: 0.8rem;
+            color: #666;
+            line-height: 1.3;
+        }
+
+        .popup-close {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            color: #999;
+            cursor: pointer;
+            padding: 0;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .popup-close:hover {
+            color: #666;
+        }
+
+        /* Booking Modal */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 15px;
+            width: 100%;
+            max-width: 500px;
+            padding: 30px;
+            transform: translateY(20px);
+            transition: transform 0.3s ease;
+        }
+
+        .modal.active .modal-content {
+            transform: translateY(0);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-header h3 {
+            color: #333;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #666;
+            transition: color 0.3s ease;
+        }
+
+        .close-modal:hover {
+            color: #333;
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        /* Stats */
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #667eea;
+            margin: 10px 0;
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            color: #666;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            color: white;
+            padding: 20px;
+            margin-top: 40px;
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .dashboard {
+                padding: 20px 15px;
+            }
+            
+            .panel {
+                padding: 20px 15px;
+            }
+            
+            .dashboard-header {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+            
+            .skills-list {
+                grid-template-columns: 1fr;
+            }
+            
+            .modal-content {
+                margin: 0 15px;
+            }
+        }
+
+        /* Animation */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .skill-card, .panel, .stat-card {
+            animation: fadeIn 0.5s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-hands-helping"></i> SkillShare</h1>
+            <p>Connect, Learn, Grow. Book short peer learning sessions and share your expertise with fellow students.</p>
+        </header>
+
+        <div class="dashboard">
+            <div class="dashboard-header">
+                <h2><i class="fas fa-chalkboard-teacher"></i> Peer Learning Dashboard</h2>
+                <div class="user-profile" id="userProfile">
+                    <div class="user-avatar" id="userAvatar">JS</div>
+                    <div class="user-info">
+                        <h3 id="userName">Jane Smith</h3>
+                        <p>Computer Science Major</p>
+                    </div>
+                    <button class="logout-btn" id="authBtn">Logout <i class="fas fa-sign-out-alt"></i></button>
+                </div>
+            </div>
+
+            <div class="stats-container">
+                <div class="stat-card" onclick="showRatings()" style="cursor: pointer;">
+                    <i class="fas fa-star" style="font-size: 2rem; color: #ffc107;"></i>
+                    <div class="stat-value">4.8</div>
+                    <div class="stat-label">Average Rating</div>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-users" style="font-size: 2rem; color: #28a745;"></i>
+                    <div class="stat-value">27</div>
+                    <div class="stat-label">Students Taught</div>
+                </div>
+                <div class="stat-card" onclick="showSkillsLearnedModal()" style="cursor: pointer;">
+                    <i class="fas fa-book" style="font-size: 2rem; color: #dc3545;"></i>
+                    <div class="stat-value">4</div>
+                    <div class="stat-label">Skills Learned</div>
+                </div>
+                <div class="stat-card" onclick="showSessionsHostedModal()" style="cursor: pointer;">
+                    <i class="fas fa-calendar-check" style="font-size: 2rem; color: #6610f2;"></i>
+                    <div class="stat-value">2</div>
+                    <div class="stat-label">Sessions Hosted</div>
+                </div>
+            </div>
+
+            <div class="main-content">
+                <!-- Left Column -->
+                <div class="left-column">
+                    <!-- My Skills Panel -->
+                    <div class="panel">
+                        <div class="panel-header">
+                            <h3><i class="fas fa-tools"></i> My Teaching Skills</h3>
+                            <button class="btn" id="addSkillBtn" onclick="showPopupMessage('Add Skill', 'Add skill form would open here', 'info', 2000)"><i class="fas fa-plus"></i> Add Skill</button>
+                        </div>
+                        
+                        <div class="my-skills-list">
+                            <div class="my-skill">
+                                <span>Python Programming</span>
+                                <div class="remove-skill"><i class="fas fa-times"></i></div>
+                            </div>
+                            <div class="my-skill">
+                                <span>Web Design</span>
+                                <div class="remove-skill"><i class="fas fa-times"></i></div>
+                            </div>
+                            <div class="my-skill">
+                                <span>Data Structures</span>
+                                <div class="remove-skill"><i class="fas fa-times"></i></div>
+                            </div>
+                            <div class="my-skill">
+                                <span>Spanish Language</span>
+                                <div class="remove-skill"><i class="fas fa-times"></i></div>
+                            </div>
+                        </div>
+                        
+                        <div class="add-skill-form" id="addSkillForm" style="display: none;">
+                            <h4>Add New Skill</h4>
+                            <div class="form-group">
+                                <label for="skillName">Skill Name</label>
+                                <input type="text" id="skillName" placeholder="e.g., Machine Learning, Graphic Design">
+                            </div>
+                            <div class="form-group">
+                                <label for="skillCategory">Category</label>
+                                <select id="skillCategory">
+                                    <option value="programming">Programming</option>
+                                    <option value="design">Design</option>
+                                    <option value="languages">Languages</option>
+                                    <option value="math">Mathematics</option>
+                                    <option value="science">Science</option>
+                                    <option value="business">Business</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="skillDescription">Description</label>
+                                <textarea id="skillDescription" placeholder="Describe what you can teach about this skill" rows="3"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="skillLevel">Your Proficiency Level</label>
+                                <select id="skillLevel">
+                                    <option value="beginner">Beginner</option>
+                                    <option value="intermediate">Intermediate</option>
+                                    <option value="advanced">Advanced</option>
+                                    <option value="expert">Expert</option>
+                                </select>
+                            </div>
+                            <button class="btn">Add Skill</button>
+                        </div>
+                    </div>
+                    
+                    <!-- My Bookings Panel -->
+                    <div class="panel">
+                        <div class="panel-header">
+                            <h3><i class="fas fa-calendar-alt"></i> My Bookings</h3>
+                        </div>
+                        
+                        <div class="bookings-container">
+                            <div class="booking-card" onclick="showPopupMessage('Booking Details', 'Web Design Basics with Michael Chen - Tomorrow, 3:00 PM - 4:00 PM (Confirmed)', 'info', 3000)" style="cursor: pointer;">
+                                <div class="booking-info">
+                                    <h4>Web Design Basics</h4>
+                                    <div class="booking-details">
+                                        <p>With: Michael Chen | Tomorrow, 3:00 PM - 4:00 PM</p>
+                                    </div>
+                                </div>
+                                <div class="booking-actions">
+                                    <div class="booking-status status-confirmed">Confirmed</div>
+                                </div>
+                            </div>
+                            
+                            <div class="booking-card">
+                                <div class="booking-info">
+                                    <h4>French Conversation</h4>
+                                    <div class="booking-details">
+                                        <p>With: Sophie Martin | Friday, 11:00 AM - 12:00 PM</p>
+                                    </div>
+                                </div>
+                                <div class="booking-actions">
+                                    <div class="booking-status status-pending">Pending</div>
+                                    <button class="btn btn-outline cancel-booking-btn" data-booking="French Conversation" onclick="cancelBookingFromMyBookings(this)">Cancel</button>
+                                </div>
+                            </div>
+                            
+                            <div class="booking-card" onclick="showPopupMessage('Booking Details', 'Calculus Tutoring with David Wilson - Completed on June 15', 'success', 3000)" style="cursor: pointer;">
+                                <div class="booking-info">
+                                    <h4>Calculus Tutoring</h4>
+                                    <div class="booking-details">
+                                        <p>With: David Wilson | Completed on June 15</p>
+                                    </div>
+                                </div>
+                                <div class="booking-actions">
+                                    <div class="booking-status status-completed">Completed</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Live Classes Panel -->
+                    <div class="panel">
+                        <div class="panel-header">
+                            <h3><i class="fas fa-video"></i> Live Classes</h3>
+                        </div>
+                        
+                        <div class="live-classes-container">
+                            <div class="live-class-card">
+                                <div class="live-class-info">
+                                    <h4>JavaScript Fundamentals</h4>
+                                    <div class="live-class-details">
+                                        <p><i class="fas fa-calendar"></i> Live Now</p>
+                                        <p><i class="fas fa-users"></i> 5 members joined</p>
+                                    </div>
+                                </div>
+                                <div class="live-class-actions">
+                                    <div class="live-class-status status-live">Live Now</div>
+                                    <button class="btn" onclick="joinLiveClass('https://zoom.us/j/1234567890')">
+                                        <i class="fas fa-video"></i> Join Zoom
+                                    </button>
+                                    <button class="btn btn-outline" onclick="deleteClass('JavaScript Fundamentals', this)" style="background: #dc3545; color: white; border-color: #dc3545;">
+                                        <i class="fas fa-trash"></i> Delete
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="live-class-card">
+                                <div class="live-class-info">
+                                    <h4>React Study Circle</h4>
+                                    <div class="live-class-details">
+                                        <p><i class="fas fa-calendar"></i> Tomorrow 2:00 PM</p>
+                                        <p><i class="fas fa-users"></i> 8 members registered</p>
+                                    </div>
+                                </div>
+                                <div class="live-class-actions">
+                                    <div class="live-class-status status-scheduled">Scheduled</div>
+                                    <button class="btn" onclick="joinLiveClass('https://zoom.us/j/0987654321')">
+                                        <i class="fas fa-video"></i> Join Zoom
+                                    </button>
+                                    <button class="btn btn-outline" onclick="deleteClass('React Study Circle', this)" style="background: #dc3545; color: white; border-color: #dc3545;">
+                                        <i class="fas fa-trash"></i> Delete
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- NEW: Live Classes Panel -->
+                    <div class="panel">
+                        <div class="panel-header">
+                            <h3><i class="fas fa-video"></i> My Live Classes</h3>
+                            <button class="btn" id="createLiveClassBtn" onclick="showPopupMessage('Create Class', 'Live class creation form would open here', 'info', 2000)"><i class="fas fa-plus"></i> Create Class</button>
+                        </div>
+                        
+                        <div class="live-classes-container">
+                            <div class="live-class-card">
+                                <div class="live-class-info">
+                                    <h4>Advanced JavaScript Patterns</h4>
+                                    <div class="live-class-details">
+                                        <p><i class="fas fa-calendar"></i> Live Now! Ends at 4:30 PM</p>
+                                        <p><i class="fas fa-users"></i> 12/15 students joined</p>
+                                        <p><i class="fas fa-link"></i> Zoom Meeting Active</p>
+                                    </div>
+                                </div>
+                                <div class="live-class-actions">
+                                    <div class="live-class-status status-live">Live Now</div>
+                                    <button class="btn" onclick="joinLiveClass('https://zoom.us/j/123456789')">
+                                        <i class="fas fa-video"></i> Join Class
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Video Upload Section for Hosts -->
+                    <div class="panel" id="videoUploadSection" style="display: none;">
+                        <div class="panel-header">
+                            <h3><i class="fas fa-video"></i> Teaching Videos</h3>
+                            <div class="panel-buttons">
+                                <button class="btn btn-outline" id="viewAnalyticsBtn" onclick="showPopupMessage('Analytics', 'Teaching analytics dashboard would open here', 'info', 2000)"><i class="fas fa-chart-line"></i> View Analytics</button>
+                                <button class="btn" onclick="uploadVideo()"><i class="fas fa-plus"></i> Upload Video</button>
+                            </div>
+                        </div>
+                        
+                        <div class="video-list">
+                            <div class="video-card">
+                                <div class="video-thumbnail">
+                                    <i class="fas fa-play-circle" style="font-size: 3rem; color: #667eea;"></i>
+                                </div>
+                                <div class="video-info">
+                                    <h4>Introduction to React Hooks</h4>
+                                    <p class="video-details">Programming • 25 minutes • 156 views</p>
+                                    <div class="video-stats">
+                                        <span class="video-rating">
+                                            <i class="fas fa-star"></i> 4.8 (23 reviews)
+                                        </span>
+                                        <span class="video-status status-published">Published</span>
+                                    </div>
+                                </div>
+                                <div class="video-actions">
+                                    <button class="btn btn-outline" onclick="editVideo('Introduction to React Hooks')">Edit</button>
+                                    <button class="btn btn-outline" onclick="deleteVideo('Introduction to React Hooks')">Delete</button>
+                                </div>
+                            </div>
+                            
+                            <div class="video-card">
+                                <div class="video-thumbnail">
+                                    <i class="fas fa-play-circle" style="font-size: 3rem; color: #667eea;"></i>
+                                </div>
+                                <div class="video-info">
+                                    <h4>Advanced State Management</h4>
+                                    <p class="video-details">Programming • 45 minutes • 89 views</p>
+                                    <div class="video-stats">
+                                        <span class="video-rating">
+                                            <i class="fas fa-star"></i> 4.9 (15 reviews)
+                                        </span>
+                                        <span class="video-status status-published">Published</span>
+                                    </div>
+                                </div>
+                                <div class="video-actions">
+                                    <button class="btn btn-outline" onclick="editVideo('Advanced State Management')">Edit</button>
+                                    <button class="btn btn-outline" onclick="deleteVideo('Advanced State Management')">Delete</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Right Column -->
+                <div class="right-column">
+                    <!-- Browse Skills Panel -->
+                    <div class="panel">
+                        <div class="panel-header">
+                            <h3><i class="fas fa-search"></i> Browse Skills to Learn</h3>
+                            <div class="filter-controls">
+                                <select id="categoryFilter">
+                                    <option value="">All Categories</option>
+                                    <option value="Programming">Programming</option>
+                                    <option value="Design">Design</option>
+                                    <option value="Languages">Languages</option>
+                                    <option value="Mathematics">Mathematics</option>
+                                    <option value="Science">Science</option>
+                                    <option value="Business">Business</option>
+                                    <option value="Arts">Arts</option>
+                                    <option value="Music">Music</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="skills-list">
+                            <!-- Skill Card 1 -->
+                            <div class="skill-card">
+                                <div class="skill-header">
+                                    <div class="skill-title">React Development</div>
+                                    <div class="skill-category">Programming</div>
+                                </div>
+                                <div class="skill-details">
+                                    Learn React fundamentals, hooks, state management and build real-world applications.
+                                </div>
+                                <div class="skill-meta">
+                                    <div class="tutor-info">
+                                        <div class="tutor-avatar">MC</div>
+                                        <div class="tutor-name">Michael Chen</div>
+                                    </div>
+                                    <div class="skill-rating" onclick="showRatings('React Development')">
+                                        <i class="fas fa-star"></i>
+                                        <span>4.9 (32)</span>
+                                    </div>
+                                </div>
+                                <div class="skill-actions">
+                                    <button class="btn btn-outline" onclick="bookSession('React Development', 'Michael Chen')"><i class="far fa-calendar"></i> Book Session</button>
+                                    <button class="btn cancel-booking-btn" style="display: none;"><i class="fas fa-times"></i> Cancel Booking</button>
+                                </div>
+                            </div>
+                            
+                            <!-- Skill Card 2 -->
+                            <div class="skill-card">
+                                <div class="skill-header">
+                                    <div class="skill-title">UI/UX Design</div>
+                                    <div class="skill-category">Design</div>
+                                </div>
+                                <div class="skill-details">
+                                    Master design principles, wireframing, prototyping, and user testing techniques.
+                                </div>
+                                <div class="skill-meta">
+                                    <div class="tutor-info">
+                                        <div class="tutor-avatar">ED</div>
+                                        <div class="tutor-name">Emma Davis</div>
+                                    </div>
+                                    <div class="skill-rating">
+                                        <i class="fas fa-star"></i>
+                                        <span>4.7 (24)</span>
+                                    </div>
+                                </div>
+                                <div class="skill-actions">
+                                    <button class="btn btn-outline" onclick="bookSession('UI/UX Design', 'Emma Davis')"><i class="far fa-calendar"></i> Book Session</button>
+                                    <button class="btn cancel-booking-btn" style="display: none;"><i class="fas fa-times"></i> Cancel Booking</button>
+                                </div>
+                            </div>
+                            
+                            <!-- Skill Card 3 -->
+                            <div class="skill-card">
+                                <div class="skill-header">
+                                    <div class="skill-title">Spanish Conversation</div>
+                                    <div class="skill-category">Languages</div>
+                                </div>
+                                <div class="skill-details">
+                                    Practice conversational Spanish with a native speaker. All levels welcome!
+                                </div>
+                                <div class="skill-meta">
+                                    <div class="tutor-info">
+                                        <div class="tutor-avatar">CR</div>
+                                        <div class="tutor-name">Carlos Rodriguez</div>
+                                    </div>
+                                    <div class="skill-rating">
+                                        <i class="fas fa-star"></i>
+                                        <span>5.0 (18)</span>
+                                    </div>
+                                </div>
+                                <div class="skill-actions">
+                                    <button class="btn btn-outline" onclick="bookSession('Spanish Conversation', 'Carlos Rodriguez')"><i class="far fa-calendar"></i> Book Session</button>
+                                    <button class="btn cancel-booking-btn" style="display: none;"><i class="fas fa-times"></i> Cancel Booking</button>
+                                </div>
+                            </div>
+                            
+                            <!-- Skill Card 4 -->
+                            <div class="skill-card">
+                                <div class="skill-header">
+                                    <div class="skill-title">Machine Learning</div>
+                                    <div class="skill-category">Programming</div>
+                                </div>
+                                <div class="skill-details">
+                                    Introduction to ML concepts, algorithms, and practical implementation in Python.
+                                </div>
+                                <div class="skill-meta">
+                                    <div class="tutor-info">
+                                        <div class="tutor-avatar">RJ</div>
+                                        <div class="tutor-name">Raj Patel</div>
+                                    </div>
+                                    <div class="skill-rating">
+                                        <i class="fas fa-star"></i>
+                                        <span>4.8 (21)</span>
+                                    </div>
+                                </div>
+                                <div class="skill-actions">
+                                    <button class="btn btn-outline" onclick="bookSession('Machine Learning', 'Raj Patel')"><i class="far fa-calendar"></i> Book Session</button>
+                                    <button class="btn cancel-booking-btn" style="display: none;"><i class="fas fa-times"></i> Cancel Booking</button>
+                                </div>
+                            </div>
+                            
+                            <!-- Skill Card 5 -->
+                            <div class="skill-card">
+                                <div class="skill-header">
+                                    <div class="skill-title">Digital Marketing</div>
+                                    <div class="skill-category">Business</div>
+                                </div>
+                                <div class="skill-details">
+                                    Learn social media marketing, SEO, content strategy, and analytics for business growth.
+                                </div>
+                                <div class="skill-meta">
+                                    <div class="tutor-info">
+                                        <div class="tutor-avatar">LM</div>
+                                        <div class="tutor-name">Lisa Martinez</div>
+                                    </div>
+                                    <div class="skill-rating">
+                                        <i class="fas fa-star"></i>
+                                        <span>4.6 (15)</span>
+                                    </div>
+                                </div>
+                                <div class="skill-actions">
+                                    <button class="btn btn-outline" onclick="bookSession('Digital Marketing', 'Lisa Martinez')"><i class="far fa-calendar"></i> Book Session</button>
+                                    <button class="btn cancel-booking-btn" style="display: none;"><i class="fas fa-times"></i> Cancel Booking</button>
+                                </div>
+                            </div>
+                            
+                            <!-- Skill Card 6 -->
+                            <div class="skill-card">
+                                <div class="skill-header">
+                                    <div class="skill-title">Photography Basics</div>
+                                    <div class="skill-category">Arts</div>
+                                </div>
+                                <div class="skill-details">
+                                    Master camera settings, composition, lighting, and photo editing techniques.
+                                </div>
+                                <div class="skill-meta">
+                                    <div class="tutor-info">
+                                        <div class="tutor-avatar">TK</div>
+                                        <div class="tutor-name">Tom Kim</div>
+                                    </div>
+                                    <div class="skill-rating">
+                                        <i class="fas fa-star"></i>
+                                        <span>4.9 (28)</span>
+                                    </div>
+                                </div>
+                                <div class="skill-actions">
+                                    <button class="btn btn-outline" onclick="bookSession('Photography Basics', 'Tom Kim')"><i class="far fa-calendar"></i> Book Session</button>
+                                    <button class="btn cancel-booking-btn" style="display: none;"><i class="fas fa-times"></i> Cancel Booking</button>
+                                </div>
+                            </div>
+                            
+                            <!-- Skill Card 7 -->
+                            <div class="skill-card">
+                                <div class="skill-header">
+                                    <div class="skill-title">Guitar Lessons</div>
+                                    <div class="skill-category">Music</div>
+                                </div>
+                                <div class="skill-details">
+                                    Learn guitar fundamentals, chords, strumming patterns, and popular songs.
+                                </div>
+                                <div class="skill-meta">
+                                    <div class="tutor-info">
+                                        <div class="tutor-avatar">AS</div>
+                                        <div class="tutor-name">Alex Smith</div>
+                                    </div>
+                                    <div class="skill-rating">
+                                        <i class="fas fa-star"></i>
+                                        <span>4.7 (19)</span>
+                                    </div>
+                                </div>
+                                <div class="skill-actions">
+                                    <button class="btn btn-outline" onclick="bookSession('Guitar Lessons', 'Alex Smith')"><i class="far fa-calendar"></i> Book Session</button>
+                                    <button class="btn cancel-booking-btn" style="display: none;"><i class="fas fa-times"></i> Cancel Booking</button>
+                                </div>
+                            </div>
+                            
+                            <!-- Skill Card 8 -->
+                            <div class="skill-card">
+                                <div class="skill-header">
+                                    <div class="skill-title">Data Science</div>
+                                    <div class="skill-category">Science</div>
+                                </div>
+                                <div class="skill-details">
+                                    Learn data analysis, visualization, statistics, and machine learning with Python and R.
+                                </div>
+                                <div class="skill-meta">
+                                    <div class="tutor-info">
+                                        <div class="tutor-avatar">NK</div>
+                                        <div class="tutor-name">Nina Kumar</div>
+                                    </div>
+                                    <div class="skill-rating">
+                                        <i class="fas fa-star"></i>
+                                        <span>4.8 (25)</span>
+                                    </div>
+                                </div>
+                                <div class="skill-actions">
+                                    <button class="btn btn-outline" onclick="bookSession('Data Science', 'Nina Kumar')"><i class="far fa-calendar"></i> Book Session</button>
+                                    <button class="btn cancel-booking-btn" style="display: none;"><i class="fas fa-times"></i> Cancel Booking</button>
+                                </div>
+                            </div>
+                            
+                            <!-- No courses message -->
+                            <div id="noCoursesMessage" style="display: none; text-align: center; padding: 40px; color: #666;">
+                                <i class="fas fa-search" style="font-size: 3rem; margin-bottom: 20px; opacity: 0.5;"></i>
+                                <h3 style="margin-bottom: 10px;">No Courses Available</h3>
+                                <p>There are currently no courses available in the selected category.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>SkillShare - Promoting collaborative upskilling within our campus community</p>
+            <p>© 2023 SkillShare Platform | Over 500 skills shared this semester</p>
+        </footer>
+    </div>
+    
+    <!-- Booking Modal -->
+    <div class="modal" id="bookingModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="far fa-calendar-check"></i> Book Learning Session</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="form-group">
+                <label for="sessionSkill">Skill</label>
+                <input type="text" id="sessionSkill" value="React Development" disabled>
+            </div>
+            <div class="form-group">
+                <label for="sessionTutor">Tutor</label>
+                <input type="text" id="sessionTutor" value="Michael Chen" disabled>
+            </div>
+            <div class="form-group">
+                <label for="sessionDate">Date</label>
+                <input type="date" id="sessionDate">
+            </div>
+            <div class="form-group">
+                <label for="sessionTime">Time</label>
+                <select id="sessionTime">
+                    <option>9:00 AM - 10:00 AM</option>
+                    <option>10:30 AM - 11:30 AM</option>
+                    <option>1:00 PM - 2:00 PM</option>
+                    <option>3:00 PM - 4:00 PM</option>
+                    <option>4:30 PM - 5:30 PM</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="sessionNotes">Learning Goals</label>
+                <textarea id="sessionNotes" placeholder="What do you hope to learn in this session?" rows="3"></textarea>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="cancelBooking">Cancel</button>
+                <button class="btn" id="confirmBooking">Confirm Booking</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Live Class Modal -->
+    <div class="modal" id="createLiveClassModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-chalkboard-teacher"></i> Create Live Class</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="form-group">
+                <label for="liveClassTitle">Class Title</label>
+                <input type="text" id="liveClassTitle" placeholder="e.g., React Fundamentals Workshop" required>
+            </div>
+            <div class="form-group">
+                <label for="liveClassSkill">Skill Category</label>
+                <select id="liveClassSkill" required>
+                    <option value="">Select a skill</option>
+                    <option value="programming">Programming</option>
+                    <option value="design">Design</option>
+                    <option value="mathematics">Mathematics</option>
+                    <option value="languages">Languages</option>
+                    <option value="science">Science</option>
+                    <option value="business">Business</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="liveClassDate">Date</label>
+                <input type="date" id="liveClassDate" required>
+            </div>
+            <div class="form-group">
+                <label for="liveClassTime">Start Time</label>
+                <select id="liveClassTime" required>
+                    <option>9:00 AM</option>
+                    <option>10:30 AM</option>
+                    <option>1:00 PM</option>
+                    <option>3:00 PM</option>
+                    <option>4:30 PM</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="liveClassDuration">Duration (minutes)</label>
+                <input type="number" id="liveClassDuration" placeholder="e.g., 90" min="15" max="180" required>
+            </div>
+            <div class="form-group">
+                <label for="liveClassCapacity">Max Participants</label>
+                <input type="number" id="liveClassCapacity" placeholder="e.g., 15" min="1" max="50" required>
+            </div>
+            <div class="form-group">
+                <label for="liveClassDescription">Class Description</label>
+                <textarea id="liveClassDescription" placeholder="Describe what you'll teach in this live class..." rows="3" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="zoomMeetingUrl">Zoom Meeting URL</label>
+                <div style="display: flex; gap: 10px;">
+                    <input type="text" id="zoomMeetingUrl" placeholder="https://zoom.us/j/..." required>
+                    <button class="btn btn-outline" id="generateZoomUrlBtn">Generate</button>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline close-modal">Cancel</button>
+                <button class="btn" id="createLiveClass">Create Class</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Student Management Modal -->
+    <div class="modal" id="studentManagementModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-users-cog"></i> Manage Students</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="student-management-content">
+                <div class="registered-students">
+                    <h4>Registered Students (5/15)</h4>
+                    <div class="student-list">
+                        <div class="student-item">
+                            <div class="student-info">
+                                <div class="student-avatar">JD</div>
+                                <div>
+                                    <div class="student-name">John Doe</div>
+                                    <div class="student-email">john.doe@email.com</div>
+                                </div>
+                            </div>
+                            <div class="student-actions">
+                                <button class="btn btn-outline" onclick="removeStudent('john.doe@email.com')">
+                                    <i class="fas fa-times"></i> Remove
+                                </button>
+                            </div>
+                        </div>
+                        <div class="student-item">
+                            <div class="student-info">
+                                <div class="student-avatar">SM</div>
+                                <div>
+                                    <div class="student-name">Sarah Miller</div>
+                                    <div class="student-email">sarah.miller@email.com</div>
+                                </div>
+                            </div>
+                            <div class="student-actions">
+                                <button class="btn btn-outline" onclick="removeStudent('sarah.miller@email.com')">
+                                    <i class="fas fa-times"></i> Remove
+                                </button>
+                            </div>
+                        </div>
+                        <div class="student-item">
+                            <div class="student-info">
+                                <div class="student-avatar">MJ</div>
+                                <div>
+                                    <div class="student-name">Mike Johnson</div>
+                                    <div class="student-email">mike.johnson@email.com</div>
+                                </div>
+                            </div>
+                            <div class="student-actions">
+                                <button class="btn btn-outline" onclick="removeStudent('mike.johnson@email.com')">
+                                    <i class="fas fa-times"></i> Remove
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="add-student-section">
+                    <h4>Add Student</h4>
+                    <div class="form-group">
+                        <label for="studentEmail">Student Email</label>
+                        <input type="email" id="studentEmail" placeholder="student@email.com">
+                    </div>
+                    <button class="btn" id="addStudentBtn">
+                        <i class="fas fa-plus"></i> Add Student
+                    </button>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-outline close-modal">Close</button>
+                <button class="btn" id="sendInvitations">
+                    <i class="fas fa-envelope"></i> Send Invitations
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Quick Home Access -->
+    <div style="position: fixed; bottom: 20px; right: 20px; z-index: 1000;">
+        <a href="home.html" style="display: flex; align-items: center; justify-content: center; width: 50px; height: 50px; background: #667eea; color: white; border-radius: 50%; text-decoration: none; font-size: 20px; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3); transition: all 0.3s ease;" onmouseover="this.style.background='#5a6fd8'; this.style.transform='translateY(-3px)'; this.style.boxShadow='0 6px 20px rgba(102, 126, 234, 0.4)'" onmouseout="this.style.background='#667eea'; this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(102, 126, 234, 0.3)'" title="Back to Home">
+            🏠
+        </a>
+    </div>
+    
+    <!-- Ratings Modal -->
+    <div class="ratings-modal" id="ratingsModal">
+        <div class="ratings-popup">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 2px solid #eee;">
+                <h3 id="ratingsTitle" style="font-size: 1.5rem; font-weight: 600; color: #333;">Skill Ratings</h3>
+                <button onclick="closeRatingsModal()" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #666; padding: 5px; border-radius: 50%; transition: all 0.3s ease;">&times;</button>
+            </div>
+            
+            <div style="text-align: center; margin-bottom: 2rem; padding: 1.5rem; background: #f8f9fa; border-radius: 10px;">
+                <div id="overallRating" style="font-size: 3rem; font-weight: bold; color: #667eea; margin-bottom: 0.5rem;">4.5</div>
+                <div id="overallStars" style="font-size: 1.5rem; color: #ffc107; margin-bottom: 0.5rem;"></div>
+                <div id="ratingCount" style="color: #666; font-size: 0.9rem;">Based on 12 reviews</div>
+            </div>
+            
+            <div id="individualRatings"></div>
+        </div>
+    </div>
+    
+    <!-- Skills Learned Modal -->
+    <div class="ratings-modal" id="skillsLearnedModal">
+        <div class="ratings-popup">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 2px solid #eee;">
+                <h3 style="font-size: 1.5rem; font-weight: 600; color: #333;">Skills Learned</h3>
+                <button onclick="closeSkillsLearnedModal()" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #666; padding: 5px; border-radius: 50%; transition: all 0.3s ease;">&times;</button>
+            </div>
+            
+            <div id="skillsLearnedContent"></div>
+        </div>
+    </div>
+    
+    <!-- Sessions Hosted Modal -->
+    <div class="ratings-modal" id="sessionsHostedModal">
+        <div class="ratings-popup">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 2px solid #eee;">
+                <h3 style="font-size: 1.5rem; font-weight: 600; color: #333;">Sessions Hosted</h3>
+                <button onclick="closeSessionsHostedModal()" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #666; padding: 5px; border-radius: 50%; transition: all 0.3s ease;">&times;</button>
+            </div>
+            
+            <div id="sessionsHostedContent"></div>
+        </div>
+    </div>
+    
+    <script>
+
+        
+        // Check authentication on page load
+        function checkAuth() {
+            const user = localStorage.getItem('skillsUser');
+            const authBtn = document.getElementById('authBtn');
+            const userName = document.getElementById('userName');
+            const userAvatar = document.getElementById('userAvatar');
+            
+            if (!user) {
+                // Redirect to login if not authenticated
+                window.location.href = 'skills-login.html';
+                return;
+            }
+            
+            const userData = JSON.parse(user);
+            userName.textContent = userData.username;
+            userAvatar.textContent = userData.username.substring(0, 2).toUpperCase();
+        }
+        
+        // Auth button functionality (Login/Logout)
+        document.getElementById('authBtn').addEventListener('click', () => {
+            const user = localStorage.getItem('skillsUser');
+            
+            if (user) {
+                // Logout
+                if (confirm('Are you sure you want to logout?')) {
+                    localStorage.removeItem('skillsUser');
+                    showPopupMessage('Logged Out', 'You have been logged out successfully.', 'info', 2000);
+                    setTimeout(() => {
+                        window.location.href = 'skills-login.html';
+                    }, 1000);
+                }
+            } else {
+                // Login
+                window.location.href = 'skills-login.html';
+            }
+        });
+        
+        // Initialize authentication check
+        checkAuth();
+        
+        // Function to show popup messages
+        function showPopupMessage(title, message, type = 'success', duration = 4000) {
+            // Create popup element
+            const popup = document.createElement('div');
+            popup.className = `popup-message ${type}`;
+            
+            // Set icon based on type
+            let icon = '';
+            switch(type) {
+                case 'success':
+                    icon = 'fas fa-check-circle';
+                    break;
+                case 'error':
+                    icon = 'fas fa-exclamation-circle';
+                    break;
+                case 'warning':
+                    icon = 'fas fa-exclamation-triangle';
+                    break;
+                case 'info':
+                    icon = 'fas fa-info-circle';
+                    break;
+                default:
+                    icon = 'fas fa-check-circle';
+            }
+            
+            popup.innerHTML = `
+                <i class="${icon}"></i>
+                <div class="popup-message-content">
+                    <div class="popup-message-title">${title}</div>
+                    <div class="popup-message-text">${message}</div>
+                </div>
+                <button class="popup-close">&times;</button>
+            `;
+            
+            // Add to page
+            document.body.appendChild(popup);
+            
+            // Show popup with animation
+            setTimeout(() => {
+                popup.classList.add('show');
+            }, 100);
+            
+            // Auto remove after duration
+            const autoRemove = setTimeout(() => {
+                removePopup(popup);
+            }, duration);
+            
+            // Manual close functionality
+            const closeBtn = popup.querySelector('.popup-close');
+            closeBtn.addEventListener('click', () => {
+                clearTimeout(autoRemove);
+                removePopup(popup);
+            });
+            
+            return popup;
+        }
+        
+        // Function to remove popup with animation
+        function removePopup(popup) {
+            popup.classList.remove('show');
+            setTimeout(() => {
+                if (popup.parentNode) {
+                    popup.remove();
+                }
+            }, 300);
+        }
+        
+        // Add Skill functionality
+        const addSkillBtn = document.getElementById('addSkillBtn');
+        const addSkillForm = document.getElementById('addSkillForm');
+        const mySkillsList = document.querySelector('.my-skills-list');
+        
+        // Toggle add skill form visibility
+        addSkillBtn.addEventListener('click', () => {
+            if (addSkillForm.style.display === 'none' || addSkillForm.style.display === '') {
+                addSkillForm.style.display = 'block';
+                addSkillBtn.innerHTML = '<i class="fas fa-minus"></i> Cancel';
+                addSkillBtn.classList.add('btn-outline');
+            } else {
+                addSkillForm.style.display = 'none';
+                addSkillBtn.innerHTML = '<i class="fas fa-plus"></i> Add Skill';
+                addSkillBtn.classList.remove('btn-outline');
+                // Clear form fields
+                clearAddSkillForm();
+            }
+        });
+        
+        // Handle add skill form submission
+        const addSkillFormBtn = addSkillForm.querySelector('.btn');
+        addSkillFormBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            
+            const skillName = document.getElementById('skillName').value.trim();
+            const skillCategory = document.getElementById('skillCategory').value;
+            const skillDescription = document.getElementById('skillDescription').value.trim();
+            const skillLevel = document.getElementById('skillLevel').value;
+            
+            // Validate form fields
+            if (!skillName) {
+                showPopupMessage('Validation Error', 'Please enter a skill name.', 'error', 3000);
+                return;
+            }
+            
+            if (!skillDescription) {
+                showPopupMessage('Validation Error', 'Please enter a skill description.', 'error', 3000);
+                return;
+            }
+            
+            // Check if skill already exists
+            const existingSkills = mySkillsList.querySelectorAll('.my-skill span');
+            const skillExists = Array.from(existingSkills).some(skill => 
+                skill.textContent.toLowerCase() === skillName.toLowerCase()
+            );
+            
+            if (skillExists) {
+                showPopupMessage('Skill Already Exists', 'You already have this skill in your list.', 'warning', 3000);
+                return;
+            }
+            
+            // Create new skill element
+            const newSkill = document.createElement('div');
+            newSkill.className = 'my-skill';
+            newSkill.innerHTML = `
+                <span>${skillName}</span>
+                <div class="remove-skill" onclick="removeSkill(this)"><i class="fas fa-times"></i></div>
+            `;
+            
+            // Add the new skill to the list
+            mySkillsList.appendChild(newSkill);
+            
+            // Hide form and reset button
+            addSkillForm.style.display = 'none';
+            addSkillBtn.innerHTML = '<i class="fas fa-plus"></i> Add Skill';
+            addSkillBtn.classList.remove('btn-outline');
+            
+            // Clear form fields
+            clearAddSkillForm();
+            
+            // Show success message
+            showPopupMessage('Skill Added', `"${skillName}" has been added to your teaching skills!`, 'success', 3000);
+            
+            // Store skill in localStorage (optional - for persistence)
+            saveSkillToStorage(skillName, skillCategory, skillDescription, skillLevel);
+        });
+        
+        // Function to clear add skill form
+        function clearAddSkillForm() {
+            document.getElementById('skillName').value = '';
+            document.getElementById('skillCategory').value = 'programming';
+            document.getElementById('skillDescription').value = '';
+            document.getElementById('skillLevel').value = 'beginner';
+        }
+        
+        // Function to remove skill
+        function removeSkill(removeBtn) {
+            const skillElement = removeBtn.closest('.my-skill');
+            const skillName = skillElement.querySelector('span').textContent;
+            
+            if (confirm(`Are you sure you want to remove "${skillName}" from your teaching skills?`)) {
+                skillElement.remove();
+                showPopupMessage('Skill Removed', `"${skillName}" has been removed from your teaching skills.`, 'warning', 3000);
+                
+                // Remove from localStorage
+                removeSkillFromStorage(skillName);
+            }
+        }
+        
+        // Function to save skill to both localStorage and MongoDB
+        async function saveSkillToStorage(name, category, description, level) {
+            const newSkill = {
+                name: name,
+                category: category,
+                description: description,
+                level: level,
+                dateAdded: new Date().toISOString(),
+                username: 'current_user', // Replace with actual username
+                type: 'teaching'
+            };
+            
+            // Save to localStorage
+            let userSkills = JSON.parse(localStorage.getItem('userSkills') || '[]');
+            userSkills.push(newSkill);
+            localStorage.setItem('userSkills', JSON.stringify(userSkills));
+            
+            // Save to MongoDB
+            try {
+                const response = await fetch('/api/skills', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(newSkill)
+                });
+                
+                if (response.ok) {
+                    console.log('Skill saved to database successfully');
+                } else {
+                    console.log('Failed to save to database, using localStorage only');
+                }
+            } catch (error) {
+                console.log('Database connection failed, using localStorage only:', error);
+            }
+        }
+        
+        // Function to remove skill from both localStorage and MongoDB
+        async function removeSkillFromStorage(skillName) {
+            // Remove from localStorage
+            let userSkills = JSON.parse(localStorage.getItem('userSkills') || '[]');
+            userSkills = userSkills.filter(skill => skill.name !== skillName);
+            localStorage.setItem('userSkills', JSON.stringify(userSkills));
+            
+            // Remove from MongoDB
+            try {
+                const response = await fetch(`/api/skills/${encodeURIComponent(skillName)}`, {
+                    method: 'DELETE'
+                });
+                
+                if (response.ok) {
+                    console.log('Skill removed from database successfully');
+                } else {
+                    console.log('Failed to remove from database, removed from localStorage only');
+                }
+            } catch (error) {
+                console.log('Database connection failed, removed from localStorage only:', error);
+            }
+        }
+        
+        // Function to load skills from both MongoDB and localStorage
+        async function loadUserSkills() {
+            let userSkills = [];
+            
+            // Try to load from MongoDB first
+            try {
+                const response = await fetch('/api/skills');
+                if (response.ok) {
+                    const result = await response.json();
+                    if (result.success && result.data) {
+                        userSkills = result.data.filter(skill => skill.type === 'teaching');
+                        console.log('Skills loaded from database');
+                    }
+                }
+            } catch (error) {
+                console.log('Database connection failed, using localStorage:', error);
+            }
+            
+            // Fallback to localStorage if database fails or is empty
+            if (userSkills.length === 0) {
+                userSkills = JSON.parse(localStorage.getItem('userSkills') || '[]');
+                console.log('Skills loaded from localStorage');
+            }
+            
+            // Display skills
+            userSkills.forEach(skill => {
+                const existingSkills = mySkillsList.querySelectorAll('.my-skill span');
+                const skillExists = Array.from(existingSkills).some(existingSkill => 
+                    existingSkill.textContent.toLowerCase() === skill.name.toLowerCase()
+                );
+                
+                if (!skillExists) {
+                    const skillElement = document.createElement('div');
+                    skillElement.className = 'my-skill';
+                    skillElement.innerHTML = `
+                        <span>${skill.name}</span>
+                        <div class="remove-skill" onclick="removeSkill(this)"><i class="fas fa-times"></i></div>
+                    `;
+                    mySkillsList.appendChild(skillElement);
+                }
+            });
+        }
+        
+        // Load user skills when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            checkAuth();
+            loadUserSkills();
+        });
+        
+        // Modal functionality
+        const bookingModal = document.getElementById('bookingModal');
+        const createLiveClassModal = document.getElementById('createLiveClassModal');
+        const studentManagementModal = document.getElementById('studentManagementModal');
+        const closeModalButtons = document.querySelectorAll('.close-modal');
+        
+        // Show booking modal when "Book Session" buttons are clicked
+        document.querySelectorAll('.book-session-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                // Get skill information from the clicked skill card
+                const skillCard = button.closest('.skill-card');
+                const skillTitle = skillCard.querySelector('.skill-title').textContent;
+                const tutorName = skillCard.querySelector('.tutor-name').textContent;
+                
+                // Populate modal with skill information
+                document.getElementById('sessionSkill').value = skillTitle;
+                document.getElementById('sessionTutor').value = tutorName;
+                
+                bookingModal.classList.add('active');
+                // Store reference to the clicked button for later use
+                bookingModal.currentBookButton = button;
+            });
+        });
+        
+        // Show create live class modal
+        document.getElementById('createLiveClassBtn').addEventListener('click', () => {
+            createLiveClassModal.classList.add('active');
+            showPopupMessage('Create Live Class', 'Set up a new live class session with Zoom integration.', 'info', 3000);
+            
+            // Set default date to tomorrow
+            const tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            const tomorrowString = tomorrow.toISOString().split('T')[0];
+            document.getElementById('liveClassDate').value = tomorrowString;
+        });
+        
+        // Generate Zoom URL functionality
+        document.getElementById('generateZoomUrlBtn').addEventListener('click', () => {
+            const randomMeetingId = Math.floor(Math.random() * 9000000000) + 1000000000;
+            const zoomUrl = `https://zoom.us/j/${randomMeetingId}`;
+            document.getElementById('zoomMeetingUrl').value = zoomUrl;
+            showPopupMessage('Zoom URL Generated', 'Sample Zoom meeting URL has been generated. Replace with your actual meeting URL.', 'info', 3000);
+        });
+        
+        // Create live class functionality
+        document.getElementById('createLiveClass').addEventListener('click', () => {
+            const classTitle = document.getElementById('liveClassTitle').value;
+            const classSkill = document.getElementById('liveClassSkill').value;
+            const classDate = document.getElementById('liveClassDate').value;
+            const classTime = document.getElementById('liveClassTime').value;
+            const classDuration = document.getElementById('liveClassDuration').value;
+            const classCapacity = document.getElementById('liveClassCapacity').value;
+            const zoomUrl = document.getElementById('zoomMeetingUrl').value;
+            const classDescription = document.getElementById('liveClassDescription').value;
+            
+            if (classTitle && classSkill && classDate && classTime && classDuration && classCapacity && zoomUrl) {
+                // Create new live class
+                createNewLiveClass(classTitle, classSkill, classDate, classTime, classDuration, classCapacity, zoomUrl, classDescription);
+                
+                showPopupMessage('Live Class Created!', `"${classTitle}" has been scheduled successfully. Students can now register for your class.`, 'success');
+                createLiveClassModal.classList.remove('active');
+                
+                // Reset form
+                document.getElementById('liveClassTitle').value = '';
+                document.getElementById('liveClassSkill').value = '';
+                document.getElementById('liveClassDate').value = '';
+                document.getElementById('liveClassTime').value = '';
+                document.getElementById('liveClassDuration').value = '';
+                document.getElementById('liveClassCapacity').value = '';
+                document.getElementById('zoomMeetingUrl').value = '';
+                document.getElementById('liveClassDescription').value = '';
+            } else {
+                showPopupMessage('Missing Information', 'Please fill in all required fields to create the live class.', 'warning');
+            }
+        });
+        
+        // Function to create new live class
+        async function createNewLiveClass(title, skill, date, time, duration, capacity, zoomUrl, description) {
+            const classData = {
+                title,
+                skill,
+                date,
+                time,
+                duration,
+                capacity,
+                zoomUrl,
+                description,
+                createdBy: 'current_user', // Replace with actual username
+                createdAt: new Date().toISOString(),
+                students: [],
+                status: 'scheduled'
+            };
+            
+            // Save to both localStorage and MongoDB
+            await saveLiveClass(classData);
+            const liveClassesContainer = document.querySelector('.live-classes-container');
+            
+            // Format the date for display
+            const dateObj = new Date(date);
+            const formattedDate = dateObj.toLocaleDateString('en-US', { 
+                weekday: 'long', 
+                month: 'long', 
+                day: 'numeric' 
+            });
+            
+            // Calculate end time
+            const startTime = new Date(`${date} ${time}`);
+            const endTime = new Date(startTime.getTime() + (duration * 60000));
+            const endTimeString = endTime.toLocaleTimeString('en-US', { 
+                hour: 'numeric', 
+                minute: '2-digit', 
+                hour12: true 
+            });
+            
+            const timeString = `${time} - ${endTimeString}`;
+            
+            // Create new live class card
+            const newLiveClassCard = document.createElement('div');
+            newLiveClassCard.className = 'live-class-card';
+            newLiveClassCard.innerHTML = `
+                <div class="live-class-info">
+                    <h4>${title}</h4>
+                    <div class="live-class-details">
+                        <p><i class="fas fa-calendar"></i> ${formattedDate}, ${timeString}</p>
+                        <p><i class="fas fa-users"></i> 0/${capacity} students registered</p>
+                        <p><i class="fas fa-link"></i> Zoom Meeting Scheduled</p>
+                    </div>
+                </div>
+                <div class="live-class-actions">
+                    <div class="live-class-status status-scheduled">Scheduled</div>
+                    <button class="btn btn-outline" onclick="manageStudents('${title}')">
+                        <i class="fas fa-users-cog"></i> Manage Students
+                    </button>
+                </div>
+            `;
+            
+            // Add the new live class at the top
+            liveClassesContainer.insertBefore(newLiveClassCard, liveClassesContainer.firstChild);
+        }
+        
+        // Join live class functionality
+        function joinLiveClass(zoomUrl) {
+            window.open(zoomUrl, '_blank');
+            showPopupMessage('Joining Live Class', 'Opening Zoom meeting...', 'info', 2000);
+        }
+        
+        // Manage students functionality
+        function manageStudents(className) {
+            studentManagementModal.classList.add('active');
+            showPopupMessage('Manage Students', `Managing students for "${className}"`, 'info', 2000);
+        }
+        
+        // Add student to class functionality
+        document.getElementById('addStudentBtn').addEventListener('click', () => {
+            const studentEmail = document.getElementById('studentEmail').value;
+            
+            if (studentEmail && isValidEmail(studentEmail)) {
+                addStudentToClass(studentEmail);
+                document.getElementById('studentEmail').value = '';
+                showPopupMessage('Student Added', `${studentEmail} has been added to the class.`, 'success');
+            } else {
+                showPopupMessage('Invalid Email', 'Please enter a valid email address.', 'warning');
+            }
+        });
+        
+        // Function to validate email
+        function isValidEmail(email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
+        
+        // Function to add student to class
+        function addStudentToClass(email) {
+            const studentList = document.querySelector('.student-list');
+            const initials = email.substring(0, 2).toUpperCase();
+            const name = email.split('@')[0].replace(/[._]/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+            
+            const newStudentItem = document.createElement('div');
+            newStudentItem.className = 'student-item';
+            newStudentItem.innerHTML = `
+                <div class="student-info">
+                    <div class="student-avatar">${initials}</div>
+                    <div>
+                        <div class="student-name">${name}</div>
+                        <div class="student-email">${email}</div>
+                    </div>
+                </div>
+                <div class="student-actions">
+                    <button class="btn btn-outline" onclick="removeStudent('${email}')">
+                        <i class="fas fa-times"></i> Remove
+                    </button>
+                </div>
+            `;
+            
+            studentList.appendChild(newStudentItem);
+        }
+        
+        // Function to remove student
+        function removeStudent(email) {
+            if (confirm(`Are you sure you want to remove ${email} from this class?`)) {
+                const studentItems = document.querySelectorAll('.student-item');
+                studentItems.forEach(item => {
+                    const studentEmail = item.querySelector('.student-email').textContent;
+                    if (studentEmail === email) {
+                        item.remove();
+                        showPopupMessage('Student Removed', `${email} has been removed from the class.`, 'info');
+                    }
+                });
+            }
+        }
+        
+        // Send invitations functionality
+        document.getElementById('sendInvitations').addEventListener('click', () => {
+            const studentEmails = Array.from(document.querySelectorAll('.student-email')).map(el => el.textContent);
+            
+            if (studentEmails.length > 0) {
+                showPopupMessage('Invitations Sent!', `Class invitations have been sent to ${studentEmails.length} student(s).`, 'success');
+                studentManagementModal.classList.remove('active');
+            } else {
+                showPopupMessage('No Students', 'Please add students before sending invitations.', 'warning');
+            }
+        });
+        
+        // Close modal functionality
+        closeModalButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                bookingModal.classList.remove('active');
+                createLiveClassModal.classList.remove('active');
+                studentManagementModal.classList.remove('active');
+            });
+        });
+        
+        // Close modal when clicking outside of modal content
+        bookingModal.addEventListener('click', (e) => {
+            if (e.target === bookingModal) {
+                bookingModal.classList.remove('active');
+            }
+        });
+        
+        createLiveClassModal.addEventListener('click', (e) => {
+            if (e.target === createLiveClassModal) {
+                createLiveClassModal.classList.remove('active');
+            }
+        });
+        
+        studentManagementModal.addEventListener('click', (e) => {
+            if (e.target === studentManagementModal) {
+                studentManagementModal.classList.remove('active');
+            }
+        });
+        
+        // Book session functionality
+        document.getElementById('confirmBooking').addEventListener('click', () => {
+            const sessionDate = document.getElementById('sessionDate').value;
+            const sessionTime = document.getElementById('sessionTime').value;
+            const sessionSkill = document.getElementById('sessionSkill').value;
+            const sessionTutor = document.getElementById('sessionTutor').value;
+            
+            if (sessionDate && sessionTime) {
+                // Add booking to My Bookings section
+                addBookingToMyBookings(sessionSkill, sessionTutor, sessionDate, sessionTime);
+                
+                showPopupMessage('Booking Confirmed!', 'Your session has been booked successfully. You will receive a confirmation shortly.', 'success');
+                
+                // Show cancel button and hide book button for the skill that was booked
+                if (bookingModal.currentBookButton) {
+                    const skillActions = bookingModal.currentBookButton.parentElement;
+                    const bookButton = skillActions.querySelector('.book-session-btn');
+                    const cancelButton = skillActions.querySelector('.cancel-booking-btn');
+                    
+                    bookButton.style.display = 'none';
+                    cancelButton.style.display = 'inline-block';
+                    
+                    // Update button text to show booking status
+                    cancelButton.innerHTML = '<i class="fas fa-times"></i> Cancel Booking';
+                }
+                
+                bookingModal.classList.remove('active');
+                
+                // Reset form
+                document.getElementById('sessionDate').value = '';
+                document.getElementById('sessionNotes').value = '';
+            } else {
+                showPopupMessage('Missing Information', 'Please select a date and time for your session.', 'warning');
+            }
+        });
+        
+        // Function to save live class to both localStorage and MongoDB
+        async function saveLiveClass(classData) {
+            // Save to localStorage
+            let liveClasses = JSON.parse(localStorage.getItem('liveClasses') || '[]');
+            liveClasses.push(classData);
+            localStorage.setItem('liveClasses', JSON.stringify(liveClasses));
+            
+            // Save to MongoDB
+            try {
+                const response = await fetch('/api/skills/live-classes', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(classData)
+                });
+                
+                if (response.ok) {
+                    console.log('Live class saved to database successfully');
+                } else {
+                    console.log('Failed to save live class to database');
+                }
+            } catch (error) {
+                console.log('Database connection failed for live class:', error);
+            }
+        }
+        
+        // Function to add booking to My Bookings section
+        function addBookingToMyBookings(skillTitle, tutorName, sessionDate, sessionTime) {
+            const bookingsContainer = document.querySelector('.bookings-container');
+            
+            // Format the date and time for display
+            const dateObj = new Date(sessionDate);
+            const formattedDate = dateObj.toLocaleDateString('en-US', { 
+                weekday: 'long', 
+                month: 'long', 
+                day: 'numeric' 
+            });
+            
+            // Create new booking card
+            const newBookingCard = document.createElement('div');
+            newBookingCard.className = 'booking-card';
+            newBookingCard.innerHTML = `
+                <div class="booking-info">
+                    <h4>${skillTitle}</h4>
+                    <div class="booking-details">
+                        <p>With: ${tutorName} | ${formattedDate}, ${sessionTime}</p>
+                    </div>
+                </div>
+                <div class="booking-actions">
+                    <div class="booking-status status-pending">Pending</div>
+                    <button class="btn btn-outline cancel-booking-btn" data-booking="${skillTitle}">Cancel</button>
+                </div>
+            `;
+            
+            // Add the new booking at the top of the bookings container
+            bookingsContainer.insertBefore(newBookingCard, bookingsContainer.firstChild);
+            
+            // Add event listener to the new cancel button
+            const newCancelButton = newBookingCard.querySelector('.cancel-booking-btn');
+            newCancelButton.addEventListener('click', (e) => {
+                const bookingName = e.target.getAttribute('data-booking');
+                if (confirm(`Are you sure you want to cancel your booking for "${bookingName}"?`)) {
+                    const bookingCard = e.target.closest('.booking-card');
+                    bookingCard.style.opacity = '0.5';
+                    
+                    // Update status
+                    const statusElement = bookingCard.querySelector('.booking-status');
+                    statusElement.textContent = 'Cancelled';
+                    statusElement.className = 'booking-status status-cancelled';
+                    
+                    // Remove cancel button
+                    e.target.remove();
+                    
+                    // Also reset the corresponding skill card button in Browse Skills
+                    resetSkillCardButton(bookingName);
+                    
+                    // Schedule removal after 1 minute
+                    scheduleBookingRemoval(bookingCard, bookingName);
+                    
+                    showPopupMessage('Booking Cancelled', `Your booking for "${bookingName}" has been cancelled. It will be automatically removed in 1 minute.`, 'warning');
+                }
+            });
+        }
+        
+        // Function to reset skill card button when booking is cancelled from My Bookings
+        function resetSkillCardButton(skillTitle) {
+            const skillCards = document.querySelectorAll('.skill-card');
+            skillCards.forEach(card => {
+                const cardTitle = card.querySelector('.skill-title').textContent;
+                if (cardTitle === skillTitle) {
+                    const skillActions = card.querySelector('.skill-actions');
+                    const bookButton = skillActions.querySelector('.book-session-btn');
+                    const cancelButton = skillActions.querySelector('.cancel-booking-btn');
+                    
+                    bookButton.style.display = 'inline-block';
+                    cancelButton.style.display = 'none';
+                }
+            });
+        }
+        
+        // Function to schedule booking removal after 1 minute
+        function scheduleBookingRemoval(bookingCard, skillTitle) {
+            // Add a visual countdown indicator
+            const statusElement = bookingCard.querySelector('.booking-status');
+            const originalText = statusElement.textContent;
+            let countdown = 60; // 60 seconds
+            
+            // Update status to show countdown
+            const countdownInterval = setInterval(() => {
+                countdown--;
+                statusElement.textContent = `${originalText} (${countdown}s)`;
+                
+                if (countdown <= 0) {
+                    clearInterval(countdownInterval);
+                }
+            }, 1000);
+            
+            setTimeout(() => {
+                // Clear the countdown interval
+                clearInterval(countdownInterval);
+                
+                // Add fade out animation
+                bookingCard.style.transition = 'opacity 0.5s ease-out, transform 0.5s ease-out';
+                bookingCard.style.opacity = '0';
+                bookingCard.style.transform = 'translateX(-100%)';
+                
+                // Remove the booking card after animation
+                setTimeout(() => {
+                    if (bookingCard.parentNode) {
+                        bookingCard.remove();
+                        console.log(`Cancelled booking for "${skillTitle}" has been automatically removed.`);
+                    }
+                }, 500); // Wait for animation to complete
+                
+            }, 60000); // 1 minute = 60000 milliseconds
+            
+            // For testing purposes, uncomment the line below to use 10 seconds instead:
+            // }, 10000); // 10 seconds for testing
+        }
+        
+        // Initialize page functionality when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            // Set default date for booking modal to tomorrow
+            const tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            const tomorrowString = tomorrow.toISOString().split('T')[0];
+            document.getElementById('sessionDate').value = tomorrowString;
+            
+            // Add keyboard shortcuts
+            document.addEventListener('keydown', (e) => {
+                // Ctrl + F to focus search
+                if (e.ctrlKey && e.key === 'f') {
+                    e.preventDefault();
+                    document.getElementById('skillSearchInput').focus();
+                }
+                
+                // Escape to close modals
+                if (e.key === 'Escape') {
+                    document.querySelectorAll('.modal.active').forEach(modal => {
+                        modal.classList.remove('active');
+                    });
+                }
+            });
+            
+            // Add tooltips to buttons
+            const tooltips = {
+                'addSkillBtn': 'Add a new skill you can teach',
+                'createLiveClassBtn': 'Create a new live class with Zoom integration',
+            };
+            
+            Object.entries(tooltips).forEach(([id, tooltip]) => {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.title = tooltip;
+                }
+            });
+            
+            console.log('SkillShare platform initialized successfully!');
+        });
+        
+        // Join live class function
+        function joinLiveClass(zoomUrl) {
+            window.open(zoomUrl, '_blank');
+            showPopupMessage('Joining Live Class', 'Opening Zoom meeting...', 'info', 2000);
+        }
+        
+        // Delete class function
+        function deleteClass(className, button) {
+            if (confirm(`Are you sure you want to delete "${className}"?`)) {
+                const liveClassCard = button.closest('.live-class-card');
+                liveClassCard.remove();
+                showPopupMessage('Class Deleted', `"${className}" has been deleted.`, 'warning', 2000);
+            }
+        }
+        
+        // Teaching dashboard functions
+        function showRatings() {
+            const ratingsHTML = `
+                <div style="max-width: 600px; margin: 20px auto; padding: 20px; background: white; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+                    <h3 style="margin-bottom: 20px; color: #333;">Student Ratings & Reviews</h3>
+                    <div style="padding: 15px; border: 1px solid #e9ecef; border-radius: 8px; margin-bottom: 15px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                            <strong>John Doe - React Development</strong>
+                            <div style="color: #ffc107;">★★★★★ 5.0</div>
+                        </div>
+                        <p style="color: #666; font-size: 0.9rem;">"Excellent teaching! Very clear explanations and practical examples."</p>
+                    </div>
+                    <div style="padding: 15px; border: 1px solid #e9ecef; border-radius: 8px; margin-bottom: 15px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                            <strong>Sarah Miller - Python Basics</strong>
+                            <div style="color: #ffc107;">★★★★☆ 4.0</div>
+                        </div>
+                        <p style="color: #666; font-size: 0.9rem;">"Good session, would like more interactive exercises."</p>
+                    </div>
+                    <button onclick="this.parentElement.remove()" style="padding: 10px 20px; background: #667eea; color: white; border: none; border-radius: 5px; cursor: pointer;">Close</button>
+                </div>
+            `;
+            document.body.insertAdjacentHTML('beforeend', ratingsHTML);
+            showPopupMessage('Ratings Loaded', 'Showing student ratings and reviews', 'info', 2000);
+        }
+        
+        function showSkillsLearned() {
+            const skillsHTML = `
+                <div style="max-width: 600px; margin: 20px auto; padding: 20px; background: white; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+                    <h3 style="margin-bottom: 20px; color: #333;">Skills Learned</h3>
+                    <div style="display: grid; gap: 15px;">
+                        <div style="padding: 15px; border-left: 4px solid #28a745; background: #f8f9fa; border-radius: 5px;">
+                            <strong>React Development</strong>
+                            <p style="color: #666; font-size: 0.9rem; margin: 5px 0;">Learned: Hooks, State Management, Components</p>
+                            <small style="color: #999;">Completed: 3 sessions with Michael Chen</small>
+                        </div>
+                        <div style="padding: 15px; border-left: 4px solid #007bff; background: #f8f9fa; border-radius: 5px;">
+                            <strong>UI/UX Design</strong>
+                            <p style="color: #666; font-size: 0.9rem; margin: 5px 0;">Learned: Wireframing, Prototyping, User Testing</p>
+                            <small style="color: #999;">Completed: 2 sessions with Emma Davis</small>
+                        </div>
+                        <div style="padding: 15px; border-left: 4px solid #ffc107; background: #f8f9fa; border-radius: 5px;">
+                            <strong>Spanish Conversation</strong>
+                            <p style="color: #666; font-size: 0.9rem; margin: 5px 0;">Learned: Basic Grammar, Pronunciation, Vocabulary</p>
+                            <small style="color: #999;">Completed: 4 sessions with Carlos Rodriguez</small>
+                        </div>
+                    </div>
+                    <button onclick="this.parentElement.remove()" style="padding: 10px 20px; background: #667eea; color: white; border: none; border-radius: 5px; cursor: pointer; margin-top: 15px;">Close</button>
+                </div>
+            `;
+            document.body.insertAdjacentHTML('beforeend', skillsHTML);
+            showPopupMessage('Skills Loaded', 'Showing your learned skills progress', 'info', 2000);
+        }
+        
+        function showSessionsHosted() {
+            const sessionsHTML = `
+                <div style="max-width: 700px; margin: 20px auto; padding: 20px; background: white; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+                    <h3 style="margin-bottom: 20px; color: #333;">Sessions Hosted</h3>
+                    <div style="display: grid; gap: 15px;">
+                        <div style="padding: 20px; border: 1px solid #e9ecef; border-radius: 8px; border-left: 4px solid #28a745;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                                <strong>React Fundamentals Workshop</strong>
+                                <span style="background: #d4edda; color: #155724; padding: 4px 8px; border-radius: 12px; font-size: 0.8rem;">Completed</span>
+                            </div>
+                            <p style="color: #666; font-size: 0.9rem; margin: 5px 0;">December 15, 2024 | 2:00 PM - 3:30 PM</p>
+                            <p style="color: #666; font-size: 0.9rem;">8 students attended | 4.8★ avg rating | $120 earned</p>
+                        </div>
+                        <div style="padding: 20px; border: 1px solid #e9ecef; border-radius: 8px; border-left: 4px solid #007bff;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                                <strong>Python Data Structures</strong>
+                                <span style="background: #d4edda; color: #155724; padding: 4px 8px; border-radius: 12px; font-size: 0.8rem;">Completed</span>
+                            </div>
+                            <p style="color: #666; font-size: 0.9rem; margin: 5px 0;">December 12, 2024 | 10:00 AM - 11:30 AM</p>
+                            <p style="color: #666; font-size: 0.9rem;">6 students attended | 4.5★ avg rating | $90 earned</p>
+                        </div>
+                        <div style="padding: 20px; border: 1px solid #e9ecef; border-radius: 8px; border-left: 4px solid #ffc107;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                                <strong>JavaScript Fundamentals</strong>
+                                <span style="background: #fff3cd; color: #856404; padding: 4px 8px; border-radius: 12px; font-size: 0.8rem;">Scheduled</span>
+                            </div>
+                            <p style="color: #666; font-size: 0.9rem; margin: 5px 0;">Tomorrow | 3:00 PM - 4:00 PM</p>
+                            <p style="color: #666; font-size: 0.9rem;">5 students registered | Zoom meeting ready</p>
+                        </div>
+                    </div>
+                    <button onclick="this.parentElement.remove()" style="padding: 10px 20px; background: #667eea; color: white; border: none; border-radius: 5px; cursor: pointer; margin-top: 15px;">Close</button>
+                </div>
+            `;
+            document.body.insertAdjacentHTML('beforeend', sessionsHTML);
+            showPopupMessage('Sessions Loaded', 'Showing your hosted sessions history', 'info', 2000);
+        }
+        
+        function uploadVideo() {
+            showPopupMessage('Upload Video', 'Video upload form would open here', 'info', 2000);
+        }
+        
+        function editVideo(videoTitle) {
+            showPopupMessage('Edit Video', `Editing "${videoTitle}"...`, 'info', 2000);
+        }
+        
+        function deleteVideo(videoTitle) {
+            if (confirm(`Are you sure you want to delete "${videoTitle}"?`)) {
+                showPopupMessage('Video Deleted', `"${videoTitle}" has been deleted.`, 'warning', 2000);
+            }
+        }
+        
+        // Category filter functionality
+        document.addEventListener('DOMContentLoaded', () => {
+            const categoryFilter = document.getElementById('categoryFilter');
+            const skillsList = document.querySelector('.skills-list');
+            const noCoursesMessage = document.getElementById('noCoursesMessage');
+            
+            categoryFilter.addEventListener('change', () => {
+                const selectedCategory = categoryFilter.value;
+                const skillCards = skillsList.querySelectorAll('.skill-card');
+                let visibleCount = 0;
+                
+                skillCards.forEach(card => {
+                    const categoryElement = card.querySelector('.skill-category');
+                    const cardCategory = categoryElement.textContent.trim();
+                    
+                    if (selectedCategory === '' || cardCategory === selectedCategory) {
+                        card.style.display = 'block';
+                        visibleCount++;
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+                
+                if (visibleCount === 0 && selectedCategory !== '') {
+                    skillsList.style.display = 'none';
+                    noCoursesMessage.style.display = 'block';
+                    noCoursesMessage.querySelector('p').textContent = `There are currently no courses available in the "${selectedCategory}" category.`;
+                    showPopupMessage('No Courses Found', `No courses available in "${selectedCategory}" category.`, 'warning', 3000);
+                } else {
+                    skillsList.style.display = 'grid';
+                    noCoursesMessage.style.display = 'none';
+                    
+                    if (selectedCategory !== '') {
+                        showPopupMessage('Filter Applied', `Showing ${visibleCount} course(s) in "${selectedCategory}" category.`, 'info', 3000);
+                    } else if (selectedCategory === '') {
+                        showPopupMessage('Filter Cleared', 'Showing all available courses.', 'info', 2000);
+                    }
+                }
+            });
+        });
+        
+        function bookSession(skillTitle, tutorName) {
+            document.getElementById('sessionSkill').value = skillTitle;
+            document.getElementById('sessionTutor').value = tutorName;
+            bookingModal.classList.add('active');
+        }
+        
+        // Ratings modal functionality
+        function showRatings(skillName) {
+            const modal = document.getElementById('ratingsModal');
+            const title = document.getElementById('ratingsTitle');
+            const overallRating = document.getElementById('overallRating');
+            const overallStars = document.getElementById('overallStars');
+            const ratingCount = document.getElementById('ratingCount');
+            const individualRatings = document.getElementById('individualRatings');
+            
+            const sampleData = {
+                overall: 4.5,
+                count: 12,
+                reviews: [
+                    { name: 'Alice Johnson', rating: 5, comment: 'Excellent tutor! Very clear explanations.', date: '2024-01-15' },
+                    { name: 'Bob Smith', rating: 4, comment: 'Good teaching style, helped me understand.', date: '2024-01-10' },
+                    { name: 'Carol Davis', rating: 5, comment: 'Amazing session! Highly recommend.', date: '2024-01-08' }
+                ]
+            };
+            
+            title.textContent = `${skillName} - Ratings & Reviews`;
+            overallRating.textContent = sampleData.overall;
+            ratingCount.textContent = `Based on ${sampleData.count} reviews`;
+            overallStars.innerHTML = generateStars(sampleData.overall);
+            
+            individualRatings.innerHTML = sampleData.reviews.map(review => `
+                <div style="display: flex; align-items: center; gap: 1rem; padding: 1rem; border-bottom: 1px solid #eee;">
+                    <div style="width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">${review.name.charAt(0)}</div>
+                    <div style="flex: 1;">
+                        <div style="font-weight: 600; margin-bottom: 0.3rem;">${review.name}</div>
+                        <div style="color: #ffc107; margin-bottom: 0.5rem;">${generateStars(review.rating)}</div>
+                        <div style="color: #555; font-size: 0.9rem; line-height: 1.4;">${review.comment}</div>
+                        <div style="color: #999; font-size: 0.8rem; margin-top: 0.3rem;">${new Date(review.date).toLocaleDateString()}</div>
+                    </div>
+                </div>
+            `).join('');
+            
+            modal.classList.add('active');
+        }
+        
+        function closeRatingsModal() {
+            document.getElementById('ratingsModal').classList.remove('active');
+        }
+        
+        function generateStars(rating) {
+            let stars = '';
+            const fullStars = Math.floor(rating);
+            const hasHalfStar = rating % 1 !== 0;
+            
+            for (let i = 0; i < fullStars; i++) {
+                stars += '<i class="fas fa-star"></i>';
+            }
+            
+            if (hasHalfStar) {
+                stars += '<i class="fas fa-star-half-alt"></i>';
+            }
+            
+            const emptyStars = 5 - Math.ceil(rating);
+            for (let i = 0; i < emptyStars; i++) {
+                stars += '<i class="far fa-star"></i>';
+            }
+            
+            return stars;
+        }
+        
+        // Close modal when clicking outside
+        document.getElementById('ratingsModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeRatingsModal();
+            }
+        });
+        
+        // Skills Learned Modal
+        function showSkillsLearnedModal() {
+            const modal = document.getElementById('skillsLearnedModal');
+            const content = document.getElementById('skillsLearnedContent');
+            
+            const skillsData = [
+                { name: 'React Development', tutor: 'Michael Chen', sessions: 3, progress: 'Advanced', rating: 4.8 },
+                { name: 'UI/UX Design', tutor: 'Emma Davis', sessions: 2, progress: 'Intermediate', rating: 4.5 },
+                { name: 'Spanish Conversation', tutor: 'Carlos Rodriguez', sessions: 4, progress: 'Beginner', rating: 4.9 },
+                { name: 'Machine Learning', tutor: 'Raj Patel', sessions: 5, progress: 'Intermediate', rating: 4.7 }
+            ];
+            
+            content.innerHTML = skillsData.map(skill => `
+                <div style="padding: 1.5rem; border-left: 4px solid #28a745; background: #f8f9fa; border-radius: 8px; margin-bottom: 1rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                        <strong style="font-size: 1.1rem;">${skill.name}</strong>
+                        <span style="background: #e3f2fd; color: #1976d2; padding: 0.3rem 0.8rem; border-radius: 15px; font-size: 0.8rem;">${skill.progress}</span>
+                    </div>
+                    <div style="color: #666; font-size: 0.9rem; margin-bottom: 0.5rem;">Tutor: ${skill.tutor}</div>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span style="color: #666; font-size: 0.8rem;">${skill.sessions} sessions completed</span>
+                        <div style="color: #ffc107;">${generateStars(skill.rating)} ${skill.rating}</div>
+                    </div>
+                </div>
+            `).join('');
+            
+            modal.classList.add('active');
+        }
+        
+        function closeSkillsLearnedModal() {
+            document.getElementById('skillsLearnedModal').classList.remove('active');
+        }
+        
+        // Sessions Hosted Modal
+        function showSessionsHostedModal() {
+            const modal = document.getElementById('sessionsHostedModal');
+            const content = document.getElementById('sessionsHostedContent');
+            
+            const sessionsData = [
+                { title: 'JavaScript Fundamentals', date: 'Tomorrow', students: 5, status: 'Scheduled', rating: null },
+                { title: 'Web Design Basics', date: 'Dec 8, 2024', students: 10, status: 'Completed', rating: 4.9 }
+            ];
+            
+            content.innerHTML = sessionsData.map(session => {
+                const statusColor = session.status === 'Completed' ? '#28a745' : session.status === 'Scheduled' ? '#ffc107' : '#6c757d';
+                const statusBg = session.status === 'Completed' ? '#d4edda' : session.status === 'Scheduled' ? '#fff3cd' : '#e2e3e5';
+                
+                return `
+                    <div style="padding: 1.5rem; border: 1px solid #e9ecef; border-radius: 8px; margin-bottom: 1rem; border-left: 4px solid ${statusColor};">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.8rem;">
+                            <strong style="font-size: 1.1rem;">${session.title}</strong>
+                            <span style="background: ${statusBg}; color: ${statusColor}; padding: 0.3rem 0.8rem; border-radius: 15px; font-size: 0.8rem; font-weight: 600;">${session.status}</span>
+                        </div>
+                        <div style="color: #666; font-size: 0.9rem; margin-bottom: 0.5rem;">${session.date} | ${session.students} students</div>
+                        <div style="display: flex; justify-content: flex-start; align-items: center;">
+                            ${session.rating ? `<div style="color: #ffc107;">${generateStars(session.rating)} ${session.rating}</div>` : '<div style="color: #999;">Not rated yet</div>'}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            modal.classList.add('active');
+        }
+        
+        function closeSessionsHostedModal() {
+            document.getElementById('sessionsHostedModal').classList.remove('active');
+        }
+        
+        // Close modals when clicking outside
+        document.getElementById('skillsLearnedModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeSkillsLearnedModal();
+            }
+        });
+        
+        document.getElementById('sessionsHostedModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeSessionsHostedModal();
+            }
+        });
+        
+        // Function to handle cancel booking from My Bookings section
+        function cancelBookingFromMyBookings(button) {
+            const bookingName = button.getAttribute('data-booking');
+            if (confirm(`Are you sure you want to cancel your booking for "${bookingName}"?`)) {
+                const bookingCard = button.closest('.booking-card');
+                bookingCard.style.opacity = '0.5';
+                
+                // Update status
+                const statusElement = bookingCard.querySelector('.booking-status');
+                statusElement.textContent = 'Cancelled';
+                statusElement.className = 'booking-status status-cancelled';
+                
+                // Remove cancel button
+                button.remove();
+                
+                showPopupMessage('Booking Cancelled', `Your booking for "${bookingName}" has been cancelled.`, 'warning', 3000);
+                
+                // Schedule removal after 1 minute
+                setTimeout(() => {
+                    bookingCard.style.transition = 'opacity 0.5s ease-out, transform 0.5s ease-out';
+                    bookingCard.style.opacity = '0';
+                    bookingCard.style.transform = 'translateX(-100%)';
+                    
+                    setTimeout(() => {
+                        if (bookingCard.parentNode) {
+                            bookingCard.remove();
+                        }
+                    }, 500);
+                }, 60000);
+            }
+        }
+    </script>
+</body>
+</html>

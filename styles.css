@@ -1,0 +1,1186 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    color: #333;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 30px;
+    color: white;
+}
+
+header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+header p {
+    font-size: 1.1rem;
+    opacity: 0.9;
+}
+
+/* Login Section */
+.login-section {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: calc(100vh - 120px);
+    padding: 20px;
+    padding-top: 20px;
+    position: relative;
+    z-index: 1000;
+}
+
+.login-form {
+    background: rgba(255, 255, 255, 0.95);
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+    width: 100%;
+    max-width: 380px;
+    position: relative;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.2);
+    margin: auto;
+}
+
+.login-form h2 {
+    text-align: center;
+    margin-bottom: 25px;
+    color: #333;
+    font-size: 1.6rem;
+    font-weight: 600;
+    position: relative;
+}
+
+.login-form h2::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 50px;
+    height: 3px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 2px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 600;
+    color: #555;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: border-color 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #667eea;
+}
+
+button {
+    width: 100%;
+    padding: 12px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* Login Help Section */
+.login-help {
+    margin-top: 20px;
+    padding: 15px;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: 10px;
+    border-left: 4px solid #667eea;
+}
+
+.login-help p {
+    margin-bottom: 10px;
+    font-size: 14px;
+    color: #495057;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.login-help p:last-child {
+    margin-bottom: 0;
+}
+
+/* Role Selection Styling */
+#userRole {
+    background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+    border: 2px solid #e9ecef;
+    transition: all 0.3s ease;
+}
+
+#userRole:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+/* Enhanced form styling */
+.form-group input:focus,
+.form-group select:focus {
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    transform: translateY(-1px);
+}
+
+/* Login button enhancement */
+.login-form button {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    padding: 15px;
+    font-size: 16px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.login-form button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s;
+}
+
+.login-form button:hover::before {
+    left: 100%;
+}
+
+/* Form Help Text */
+.form-help {
+    display: block;
+    font-size: 12px;
+    color: #6c757d;
+    margin-top: 4px;
+    font-style: italic;
+}
+
+/* Checkbox styling */
+.form-group label input[type="checkbox"] {
+    width: auto;
+    margin-right: 8px;
+    transform: scale(1.2);
+}
+
+/* Date input styling */
+input[type="date"] {
+    background: #fff;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    padding: 12px;
+    font-size: 16px;
+    width: 100%;
+    transition: border-color 0.3s ease;
+}
+
+input[type="date"]:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+/* Calendar Status Indicators */
+.calendar-status {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
+    margin-bottom: 10px;
+}
+
+.calendar-status.enabled {
+    background: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.calendar-status.disabled {
+    background: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+.announcement-status {
+    margin-bottom: 15px;
+}
+
+.announcement-scheduled {
+    font-size: 12px;
+    color: #495057;
+    margin-top: 2px;
+    font-weight: 500;
+}
+
+
+
+/* Dashboard */
+.dashboard {
+    background: white;
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid #eee;
+}
+
+.dashboard-header h2 {
+    color: #333;
+    font-size: 1.8rem;
+}
+
+.logout-btn {
+    width: auto;
+    padding: 8px 20px;
+    background: #dc3545;
+    font-size: 14px;
+}
+
+.logout-btn:hover {
+    background: #c82333;
+}
+
+/* Admin Dashboard */
+.admin-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+}
+
+.post-announcement,
+.manage-announcements {
+    background: #f8f9fa;
+    padding: 25px;
+    border-radius: 10px;
+    border: 1px solid #dee2e6;
+}
+
+.post-announcement h3,
+.manage-announcements h3 {
+    margin-bottom: 20px;
+    color: #495057;
+}
+
+/* Student Dashboard */
+.student-content {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.filters {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 10px;
+    border: 1px solid #dee2e6;
+}
+
+.filters h3 {
+    margin-bottom: 15px;
+    color: #495057;
+}
+
+.filter-controls {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 15px;
+}
+
+.filter-controls select {
+    margin-bottom: 0;
+}
+
+/* Announcements */
+.announcements-container {
+    background: #f8f9fa;
+    padding: 25px;
+    border-radius: 10px;
+    border: 1px solid #dee2e6;
+}
+
+.announcements-container h3 {
+    margin-bottom: 20px;
+    color: #495057;
+}
+
+.announcements-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.announcement-card {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    border-left: 4px solid #667eea;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    transition: transform 0.2s ease;
+}
+
+.announcement-card:hover {
+    transform: translateY(-2px);
+}
+
+.announcement-card.priority-high {
+    border-left-color: #ffc107;
+}
+
+.announcement-card.priority-urgent {
+    border-left-color: #dc3545;
+}
+
+.announcement-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 10px;
+}
+
+.announcement-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #333;
+    margin: 0;
+}
+
+.announcement-meta {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 5px;
+}
+
+.category-badge {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.category-events {
+    background: #e3f2fd;
+    color: #1976d2;
+}
+
+.category-exams {
+    background: #fff3e0;
+    color: #f57c00;
+}
+
+.category-holidays {
+    background: #e8f5e8;
+    color: #388e3c;
+}
+
+.category-general {
+    background: #f3e5f5;
+    color: #7b1fa2;
+}
+
+.category-academic {
+    background: #fce4ec;
+    color: #c2185b;
+}
+
+.priority-badge {
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.priority-normal {
+    background: #e9ecef;
+    color: #6c757d;
+}
+
+.priority-high {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.priority-urgent {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.announcement-date {
+    font-size: 12px;
+    color: #6c757d;
+    margin-top: 5px;
+}
+
+.announcement-content {
+    color: #555;
+    line-height: 1.6;
+    margin-bottom: 15px;
+}
+
+.admin-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.admin-actions button {
+    width: auto;
+    padding: 6px 12px;
+    font-size: 12px;
+}
+
+.delete-btn {
+    background: #dc3545;
+}
+
+.delete-btn:hover {
+    background: #c82333;
+}
+
+.edit-btn {
+    background: #28a745;
+}
+
+.edit-btn:hover {
+    background: #218838;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        padding: 10px;
+    }
+
+    header h1 {
+        font-size: 2rem;
+    }
+    
+    .login-section {
+        min-height: calc(100vh - 100px);
+        padding: 10px;
+        padding-top: 20px;
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+    }
+    
+    .login-form {
+        padding: 25px 20px;
+        max-width: 320px;
+    }
+    
+    .login-form h2 {
+        font-size: 1.5rem;
+    }
+    
+    .login-links {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    
+    .quick-home-access {
+        bottom: 15px;
+        right: 15px;
+    }
+    
+    .quick-home-btn {
+        width: 45px;
+        height: 45px;
+        font-size: 18px;
+    }
+
+    .admin-content {
+        grid-template-columns: 1fr;
+    }
+
+    .filter-controls {
+        grid-template-columns: 1fr;
+    }
+    
+    .view-toggle {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .calendar-header {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+    }
+    
+    .calendar-day {
+        min-height: 80px;
+        padding: 4px;
+    }
+    
+    .calendar-event-title-small {
+        font-size: 8px;
+        padding: 1px 2px;
+    }
+    
+    .more-events {
+        font-size: 7px;
+    }
+    
+    .calendar-filters {
+        margin-bottom: 15px;
+    }
+    
+    .calendar-filters select {
+        min-width: 150px;
+    }
+
+    .dashboard-header {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+    }
+
+    .announcement-header {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .announcement-meta {
+        align-items: flex-start;
+        flex-direction: row;
+        gap: 10px;
+    }
+    
+    .password-input-container input {
+        padding-right: 40px;
+    }
+    
+    .password-toggle {
+        right: 8px;
+        font-size: 14px;
+    }
+}
+
+/* Empty state */
+.empty-state {
+    text-align: center;
+    padding: 40px;
+    color: #6c757d;
+}
+
+.empty-state h4 {
+    margin-bottom: 10px;
+}
+
+/* Success message */
+.success-message {
+    background: #d4edda;
+    color: #155724;
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    border: 1px solid #c3e6cb;
+}
+
+/* Login Messages */
+.login-message {
+    padding: 12px 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-size: 14px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    animation: slideIn 0.3s ease-out;
+}
+
+.login-message.error-message {
+    background: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+.login-message.success-message {
+    background: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* View Toggle */
+.view-toggle {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    justify-content: center;
+}
+
+.view-btn {
+    width: auto;
+    padding: 10px 20px;
+    background: #f8f9fa;
+    color: #495057;
+    border: 2px solid #dee2e6;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.view-btn:hover {
+    background: #e9ecef;
+    transform: translateY(-1px);
+}
+
+.view-btn.active {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-color: #667eea;
+}
+
+.view-content {
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Calendar Styles */
+.calendar-container {
+    background: #f8f9fa;
+    padding: 25px;
+    border-radius: 10px;
+    border: 1px solid #dee2e6;
+}
+
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.calendar-header h3 {
+    margin: 0;
+    color: #495057;
+    font-size: 1.5rem;
+}
+
+.nav-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #667eea;
+    color: white;
+    border: none;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.nav-btn:hover {
+    background: #5a6fd8;
+    transform: scale(1.1);
+}
+
+.calendar-info {
+    text-align: center;
+    margin-bottom: 15px;
+    padding: 10px;
+    background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
+    border-radius: 8px;
+    border-left: 4px solid #667eea;
+}
+
+.calendar-info p {
+    margin: 0;
+    color: #495057;
+    font-size: 14px;
+}
+
+.calendar-filters {
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.calendar-filters select {
+    width: auto;
+    min-width: 200px;
+}
+
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 1px;
+    background: #dee2e6;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+
+.calendar-day-header {
+    background: #495057;
+    color: white;
+    padding: 10px;
+    text-align: center;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.calendar-day {
+    background: white;
+    min-height: 100px;
+    padding: 6px;
+    position: relative;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.calendar-day:hover {
+    background: #f8f9fa;
+    transform: scale(1.02);
+}
+
+.calendar-day.other-month {
+    background: #f8f9fa;
+    color: #6c757d;
+}
+
+.calendar-day.selected {
+    background: #e3f2fd;
+    border: 2px solid #1976d2;
+}
+
+.calendar-day.today {
+    background: #fff3e0;
+    border: 2px solid #f57c00;
+}
+
+.calendar-day.has-events {
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9ff 100%);
+}
+
+.day-number {
+    font-weight: 600;
+    margin-bottom: 4px;
+    font-size: 14px;
+    flex-shrink: 0;
+}
+
+.calendar-events-preview {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    overflow: hidden;
+}
+
+.calendar-event-title-small {
+    font-size: 9px;
+    padding: 2px 4px;
+    border-radius: 3px;
+    color: white;
+    font-weight: 500;
+    line-height: 1.2;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.calendar-event-title-small.events {
+    background: #1976d2;
+}
+
+.calendar-event-title-small.exams {
+    background: #f57c00;
+}
+
+.calendar-event-title-small.holidays {
+    background: #388e3c;
+}
+
+.calendar-event-title-small.general {
+    background: #7b1fa2;
+}
+
+.calendar-event-title-small.academic {
+    background: #c2185b;
+}
+
+.more-events {
+    font-size: 8px;
+    color: #666;
+    font-weight: 500;
+    text-align: center;
+    margin-top: 2px;
+    padding: 1px;
+    background: #e9ecef;
+    border-radius: 2px;
+}
+
+.event-indicator {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    margin: 1px;
+    display: inline-block;
+}
+
+.event-indicator.events {
+    background: #1976d2;
+}
+
+.event-indicator.exams {
+    background: #f57c00;
+}
+
+.event-indicator.holidays {
+    background: #388e3c;
+}
+
+.event-indicator.general {
+    background: #7b1fa2;
+}
+
+.event-indicator.academic {
+    background: #c2185b;
+}
+
+.selected-date-events {
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    border: 1px solid #dee2e6;
+}
+
+.selected-date-events h4 {
+    margin-bottom: 15px;
+    color: #495057;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 10px;
+}
+
+.calendar-event-item {
+    background: #f8f9fa;
+    padding: 10px;
+    border-radius: 6px;
+    margin-bottom: 10px;
+    border-left: 4px solid #667eea;
+}
+
+.calendar-event-item.priority-high {
+    border-left-color: #ffc107;
+}
+
+.calendar-event-item.priority-urgent {
+    border-left-color: #dc3545;
+}
+
+.calendar-event-title {
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+.calendar-event-content {
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 5px;
+}
+
+.calendar-event-meta {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.calendar-event-meta .category-badge {
+    font-size: 10px;
+    padding: 2px 8px;
+}
+
+.calendar-event-meta .priority-badge {
+    font-size: 10px;
+    padding: 2px 6px;
+}
+
+.event-author {
+    font-size: 10px;
+    color: #6c757d;
+    font-style: italic;
+    padding: 2px 6px;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+/* Form Help Text */
+.form-help {
+    display: block;
+    font-size: 0.8rem;
+    color: #666;
+    margin-top: 5px;
+    font-style: italic;
+}
+
+/* Input Validation Styles */
+input:invalid,
+textarea:invalid,
+select:invalid {
+    border-color: #dc3545;
+}
+
+input:valid,
+textarea:valid,
+select:valid {
+    border-color: #28a745;
+}
+
+input:focus:invalid,
+textarea:focus:invalid {
+    box-shadow: 0 0 5px rgba(220, 53, 69, 0.3);
+}
+
+input:focus:valid,
+textarea:focus:valid {
+    box-shadow: 0 0 5px rgba(40, 167, 69, 0.3);
+}
+
+/* Enhanced Form Styling */
+.form-group {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 8px rgba(102, 126, 234, 0.3);
+    transform: translateY(-1px);
+}
+
+.form-group input:invalid:not(:focus),
+.form-group textarea:invalid:not(:focus) {
+    border-color: #dc3545;
+    background-color: rgba(220, 53, 69, 0.05);
+}
+
+.form-group input:valid:not(:focus),
+.form-group textarea:valid:not(:focus) {
+    border-color: #28a745;
+    background-color: rgba(40, 167, 69, 0.05);
+}
+
+/* Required Field Indicator */
+.form-group label[for] {
+    position: relative;
+}
+
+.form-group label[for]::after {
+    content: " *";
+    color: #dc3545;
+    font-weight: bold;
+}
+
+/* New Login Features */
+.password-input-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.password-input-container input {
+    padding-right: 45px;
+}
+
+.password-toggle {
+    position: absolute;
+    right: 10px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    padding: 5px;
+    color: #666;
+    transition: color 0.3s ease;
+}
+
+.password-toggle:hover {
+    color: #333;
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: #555;
+    cursor: pointer;
+}
+
+.checkbox-label input[type="checkbox"] {
+    width: auto;
+    margin: 0;
+    transform: scale(1.1);
+}
+
+.login-links {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 15px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.forgot-password-link {
+    color: #667eea;
+    text-decoration: none;
+    font-size: 14px;
+    transition: color 0.3s ease;
+}
+
+.forgot-password-link:hover {
+    color: #5a6fd8;
+    text-decoration: underline;
+}
+
+.back-to-home-btn {
+    color: #6c757d;
+    text-decoration: none;
+    font-size: 14px;
+    transition: color 0.3s ease;
+}
+
+.back-to-home-btn:hover {
+    color: #495057;
+    text-decoration: underline;
+}
+
+.login-spinner {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+#loginButton:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+}
+
+#loginButton:disabled:hover {
+    transform: none;
+    box-shadow: none;
+}
+
+/* Quick Home Access */
+.quick-home-access {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+}
+
+.quick-home-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    background: #667eea;
+    color: white;
+    border-radius: 50%;
+    text-decoration: none;
+    font-size: 20px;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    transition: all 0.3s ease;
+}
+
+.quick-home-btn:hover {
+    background: #5a6fd8;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+    text-decoration: none;
+    color: white;
+}

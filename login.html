@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - ZeroDay Campus</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            width: 400px;
+            max-width: 90%;
+        }
+
+        .form-container {
+            padding: 40px;
+        }
+
+        .form-container.hidden {
+            display: none;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #333;
+        }
+
+        .role-selector {
+            display: flex;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 2px solid #eee;
+        }
+
+        .role-btn {
+            flex: 1;
+            padding: 12px;
+            background: #f8f9fa;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .role-btn.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .role-btn.active.student {
+            background: #1976d2;
+        }
+
+        .role-btn.active.staff {
+            background: #388e3c;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+            font-weight: 600;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #eee;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .btn:hover {
+            background: #5a6fd8;
+        }
+
+        .btn.student {
+            background: #1976d2;
+        }
+
+        .btn.student:hover {
+            background: #1565c0;
+        }
+
+        .btn.staff {
+            background: #388e3c;
+        }
+
+        .btn.staff:hover {
+            background: #2e7d32;
+        }
+
+        .switch-form {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .switch-form a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .switch-form a:hover {
+            text-decoration: underline;
+        }
+
+        .message {
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .role-indicator {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+            color: white;
+        }
+
+        .role-indicator.student {
+            background: #1976d2;
+        }
+
+        .role-indicator.staff {
+            background: #388e3c;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="role-indicator student" id="roleIndicator">🎓 STUDENT</div>
+        
+        <!-- Login Form -->
+        <div class="form-container" id="loginForm">
+            <h2 id="loginTitle">Student Login</h2>
+            <div id="loginMessage"></div>
+            
+            <div class="role-selector">
+                <button type="button" class="role-btn active student" data-role="student">Student</button>
+                <button type="button" class="role-btn staff" data-role="staff">Staff</button>
+            </div>
+            
+            <form id="loginFormElement">
+                <div class="form-group">
+                    <label for="loginUsername">Username</label>
+                    <input type="text" id="loginUsername" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Password</label>
+                    <input type="password" id="loginPassword" required>
+                </div>
+                <button type="submit" class="btn student" id="loginBtn">Login</button>
+            </form>
+            
+            <div class="switch-form">
+                <a href="#" id="showSignup">Don't have an account? Sign up</a>
+            </div>
+        </div>
+
+        <!-- Signup Form -->
+        <div class="form-container hidden" id="signupForm">
+            <h2 id="signupTitle">Student Registration</h2>
+            <div id="signupMessage"></div>
+            
+            <div class="role-selector">
+                <button type="button" class="role-btn active student" data-role="student">Student</button>
+                <button type="button" class="role-btn staff" data-role="staff">Staff</button>
+            </div>
+            
+            <form id="signupFormElement">
+                <div class="form-group">
+                    <label for="signupFullName">Full Name</label>
+                    <input type="text" id="signupFullName" required>
+                </div>
+                <div class="form-group">
+                    <label for="signupUsername">Username</label>
+                    <input type="text" id="signupUsername" required>
+                </div>
+                <div class="form-group">
+                    <label for="signupPassword">Password</label>
+                    <input type="password" id="signupPassword" required minlength="6">
+                </div>
+                <button type="submit" class="btn student" id="signupBtn">Create Account</button>
+            </form>
+            
+            <div class="switch-form">
+                <a href="#" id="showLogin">Already have an account? Login</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Simple user storage (in real app, this would be a database)
+        let users = JSON.parse(localStorage.getItem('users') || '[]');
+        let currentRole = 'student';
+
+        // DOM elements
+        const loginForm = document.getElementById('loginForm');
+        const signupForm = document.getElementById('signupForm');
+        const roleIndicator = document.getElementById('roleIndicator');
+        const loginTitle = document.getElementById('loginTitle');
+        const signupTitle = document.getElementById('signupTitle');
+        const loginBtn = document.getElementById('loginBtn');
+        const signupBtn = document.getElementById('signupBtn');
+
+        // Role selection
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('role-btn')) {
+                const container = e.target.closest('.form-container');
+                const roleButtons = container.querySelectorAll('.role-btn');
+                
+                roleButtons.forEach(btn => btn.classList.remove('active'));
+                e.target.classList.add('active');
+                
+                currentRole = e.target.dataset.role;
+                updateUI();
+            }
+        });
+
+        // Update UI based on role
+        function updateUI() {
+            const isStudent = currentRole === 'student';
+            
+            // Update indicator
+            roleIndicator.className = `role-indicator ${currentRole}`;
+            roleIndicator.textContent = isStudent ? '🎓 STUDENT' : '👨‍🏫 STAFF';
+            
+            // Update titles
+            loginTitle.textContent = isStudent ? 'Student Login' : 'Staff Login';
+            signupTitle.textContent = isStudent ? 'Student Registration' : 'Staff Registration';
+            
+            // Update buttons
+            loginBtn.className = `btn ${currentRole}`;
+            signupBtn.className = `btn ${currentRole}`;
+        }
+
+        // Form switching
+        document.getElementById('showSignup').addEventListener('click', function(e) {
+            e.preventDefault();
+            loginForm.classList.add('hidden');
+            signupForm.classList.remove('hidden');
+            clearMessages();
+        });
+
+        document.getElementById('showLogin').addEventListener('click', function(e) {
+            e.preventDefault();
+            signupForm.classList.add('hidden');
+            loginForm.classList.remove('hidden');
+            clearMessages();
+        });
+
+        // Login form submission
+        document.getElementById('loginFormElement').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('loginUsername').value.trim();
+            const password = document.getElementById('loginPassword').value;
+            
+            // Find user
+            const user = users.find(u => u.username === username && u.role === currentRole);
+            
+            if (user && user.password === password) {
+                // Store login session
+                localStorage.setItem('currentUser', JSON.stringify(user));
+                showMessage('loginMessage', `${currentRole === 'student' ? 'Student' : 'Staff'} login successful!`, 'success');
+                
+                // Redirect to home page after 1 second
+                setTimeout(() => {
+                    window.location.href = 'home.html';
+                }, 1000);
+            } else {
+                showMessage('loginMessage', 'Invalid username or password!', 'error');
+            }
+        });
+
+        // Signup form submission
+        document.getElementById('signupFormElement').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const fullName = document.getElementById('signupFullName').value.trim();
+            const username = document.getElementById('signupUsername').value.trim();
+            const password = document.getElementById('signupPassword').value;
+            
+            // Check if user already exists
+            if (users.find(u => u.username === username && u.role === currentRole)) {
+                showMessage('signupMessage', 'Username already exists for this role!', 'error');
+                return;
+            }
+            
+            // Create new user
+            const newUser = {
+                fullName,
+                username,
+                password,
+                role: currentRole,
+                createdAt: new Date().toISOString()
+            };
+            
+            users.push(newUser);
+            localStorage.setItem('users', JSON.stringify(users));
+            
+            showMessage('signupMessage', `${currentRole === 'student' ? 'Student' : 'Staff'} account created successfully!`, 'success');
+            
+            // Switch to login form after 1.5 seconds
+            setTimeout(() => {
+                signupForm.classList.add('hidden');
+                loginForm.classList.remove('hidden');
+                document.getElementById('signupFormElement').reset();
+                clearMessages();
+            }, 1500);
+        });
+
+        // Utility functions
+        function showMessage(containerId, message, type) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = `<div class="message ${type}">${message}</div>`;
+        }
+
+        function clearMessages() {
+            document.getElementById('loginMessage').innerHTML = '';
+            document.getElementById('signupMessage').innerHTML = '';
+        }
+
+        // Check if user is already logged in
+        const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
+        if (currentUser) {
+            window.location.href = 'home.html';
+        }
+
+        // Initialize UI
+        updateUI();
+    </script>
+</body>
+</html>

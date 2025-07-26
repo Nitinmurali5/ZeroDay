@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment - Bus Booking</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem 20px;
+        }
+        
+        .payment-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: white;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .booking-summary {
+            background: #f7fafc;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+        }
+        
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.8rem;
+        }
+        
+        .total-row {
+            border-top: 2px solid #e2e8f0;
+            padding-top: 0.8rem;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .payment-methods {
+            display: grid;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .payment-option {
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .payment-option:hover {
+            border-color: #667eea;
+            background: rgba(102, 126, 234, 0.05);
+        }
+        
+        .payment-option.selected {
+            border-color: #667eea;
+            background: rgba(102, 126, 234, 0.1);
+        }
+        
+        .payment-icon {
+            font-size: 2rem;
+        }
+        
+        .upi-section {
+            display: none;
+            background: #f7fafc;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-top: 1rem;
+        }
+        
+        .upi-section.active {
+            display: block;
+        }
+        
+        .qr-code {
+            text-align: center;
+            margin: 1.5rem 0;
+        }
+        
+        .qr-placeholder {
+            width: 200px;
+            height: 200px;
+            background: white;
+            border: 2px dashed #cbd5e0;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+            font-size: 3rem;
+            color: #a0aec0;
+        }
+        
+        .upi-id {
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+            margin: 1rem 0;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .pay-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-top: 1rem;
+        }
+        
+        .pay-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+        
+        .pay-btn:disabled {
+            background: #cbd5e0;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem 10px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>💳 Payment</h1>
+            <p>Complete your bus ticket booking</p>
+        </div>
+
+        <div class="payment-card">
+            <h2 style="margin-bottom: 1.5rem; color: #2d3748;">Booking Summary</h2>
+            <div class="booking-summary" id="bookingSummary">
+                <!-- Booking details will be populated here -->
+            </div>
+
+            <h3 style="margin-bottom: 1rem; color: #2d3748;">Select Payment Method</h3>
+            <div class="payment-methods">
+                <div class="payment-option" onclick="selectPayment('upi')">
+                    <div class="payment-icon">📱</div>
+                    <div>
+                        <div style="font-weight: 600;">UPI Payment</div>
+                        <div style="font-size: 0.9rem; color: #4a5568;">Pay using UPI apps like GPay, PhonePe, Paytm</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="upi-section" id="upiSection">
+                <h4 style="margin-bottom: 1rem; color: #2d3748;">UPI Payment</h4>
+                <div class="qr-code">
+                    <!-- Replace the src below with your QR code image path -->
+                    <img src="qr.jpg" alt="UPI QR Code" style="width: 200px; height: 200px; border: 2px solid #e2e8f0; border-radius: 10px; display: block; margin: 0 auto;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <div class="qr-placeholder" style="display: none;">📱</div>
+                    <p style="margin-top: 1rem; color: #4a5568;">Scan QR code with any UPI app</p>
+
+                </div>
+                
+                <div class="upi-id">
+                    <strong>UPI ID:</strong> muralinitin5@okaxis
+                    <button onclick="copyUPI()" style="margin-left: 1rem; background: #667eea; color: white; border: none; padding: 0.3rem 0.8rem; border-radius: 5px; cursor: pointer;">Copy</button>
+                </div>
+                
+                <div style="background: #fff3cd; border: 1px solid #ffeaa7; padding: 1rem; border-radius: 8px; margin: 1rem 0;">
+                    <strong>⚠️ Important:</strong> After payment, take a screenshot and click "Payment Done" below give your transaction status to bus attender.
+                </div>
+            </div>
+
+            <button class="pay-btn" id="payBtn" disabled onclick="completePayment()">
+                Select Payment Method
+            </button>
+        </div>
+    </div>
+
+    <!-- Quick Home Access -->
+    <div style="position: fixed; bottom: 20px; right: 20px; z-index: 1000;">
+        <a href="home.html" style="display: flex; align-items: center; justify-content: center; width: 50px; height: 50px; background: #667eea; color: white; border-radius: 50%; text-decoration: none; font-size: 20px; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3); transition: all 0.3s ease;" onmouseover="this.style.background='#5a6fd8'; this.style.transform='translateY(-3px)'; this.style.boxShadow='0 6px 20px rgba(102, 126, 234, 0.4)'" onmouseout="this.style.background='#667eea'; this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(102, 126, 234, 0.3)'" title="Back to Home">
+            🏠
+        </a>
+    </div>
+
+    <script>
+        let selectedPaymentMethod = null;
+        let bookingData = null;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            loadBookingData();
+        });
+
+        function loadBookingData() {
+            const pendingBooking = localStorage.getItem('pendingBooking');
+            if (!pendingBooking) {
+                alert('No booking found. Redirecting to booking page.');
+                window.location.href = 'bus-booking.html';
+                return;
+            }
+
+            bookingData = JSON.parse(pendingBooking);
+            displayBookingSummary();
+        }
+
+        function displayBookingSummary() {
+            const summaryDiv = document.getElementById('bookingSummary');
+            summaryDiv.innerHTML = `
+                <div class="summary-row">
+                    <span>Booking ID:</span>
+                    <span><strong>${bookingData.id}</strong></span>
+                </div>
+                <div class="summary-row">
+                    <span>Passenger:</span>
+                    <span>${bookingData.passengerName}</span>
+                </div>
+                <div class="summary-row">
+                    <span>Route:</span>
+                    <span>SECE → ${bookingData.route.name}</span>
+                </div>
+                <div class="summary-row">
+                    <span>Date:</span>
+                    <span>${new Date(bookingData.travelDate).toLocaleDateString()}</span>
+                </div>
+                <div class="summary-row">
+                    <span>Passengers:</span>
+                    <span>${bookingData.passengers}</span>
+                </div>
+                <div class="summary-row">
+                    <span>Distance:</span>
+                    <span>${bookingData.route.distance}</span>
+                </div>
+                <div class="summary-row total-row">
+                    <span>Total Amount:</span>
+                    <span>₹${bookingData.totalFare}</span>
+                </div>
+            `;
+        }
+
+        function selectPayment(method) {
+            selectedPaymentMethod = method;
+            
+            // Remove previous selections
+            document.querySelectorAll('.payment-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            
+            // Add selection to clicked option
+            event.currentTarget.classList.add('selected');
+            
+            // Show UPI section
+            if (method === 'upi') {
+                document.getElementById('upiSection').classList.add('active');
+                document.getElementById('payBtn').disabled = false;
+                document.getElementById('payBtn').textContent = 'Pay now';
+            }
+        }
+
+        function copyUPI() {
+            navigator.clipboard.writeText('muralinitin5@okaxis').then(() => {
+                alert('UPI ID copied to clipboard!');
+            });
+        }
+
+        async function completePayment() {
+            if (!selectedPaymentMethod) {
+                alert('Please select a payment method');
+                return;
+            }
+
+            // Update booking status
+            bookingData.paymentStatus = 'Paid';
+            bookingData.paymentMethod = 'UPI';
+            bookingData.paymentDate = new Date().toISOString();
+
+            try {
+                // Try to update payment in MongoDB
+                const response = await fetch(`http://localhost:3001/api/bus-booking/payment/${bookingData.id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        paymentStatus: 'Paid',
+                        paymentMethod: 'UPI'
+                    })
+                });
+                
+                if (response.ok) {
+                    console.log('Payment updated in MongoDB');
+                }
+            } catch (error) {
+                console.log('MongoDB update failed, using localStorage only');
+            }
+
+            // Always save to localStorage as backup
+            const bookings = JSON.parse(localStorage.getItem('busBookings') || '[]');
+            bookings.push(bookingData);
+            localStorage.setItem('busBookings', JSON.stringify(bookings));
+
+            // Remove pending booking
+            localStorage.removeItem('pendingBooking');
+
+            // Redirect to ticket page
+            localStorage.setItem('currentTicket', JSON.stringify(bookingData));
+            window.location.href = 'ticket.html';
+        }
+    </script>
+</body>
+</html>

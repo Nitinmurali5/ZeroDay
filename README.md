@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 # ZeroDay
+=======
+>>>>>>> b937941 (final)
 # 🎓 Eshwarites Management System
 
 A comprehensive web-based Eshwarites management system with multiple interconnected modules for student and administrative use.
@@ -170,4 +173,8 @@ For technical support or feature requests, contact the development team through 
 
 **Version:** 1.0  
 **Last Updated:** 2024  
+<<<<<<< HEAD
 **Developed for:** Eshwarites Management System
+=======
+**Developed for:** Eshwarites Management System
+>>>>>>> b937941 (final)

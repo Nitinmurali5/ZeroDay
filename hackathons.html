@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Explore Hackathons - TechFeed</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .back-btn {
+            background: #6c757d;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+        }
+
+        .hackathons-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .hackathon-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .hackathon-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            position: relative;
+        }
+
+        .prize-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(255,255,255,0.2);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .card-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .card-date {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .card-body {
+            padding: 25px;
+        }
+
+        .card-description {
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .card-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .feature-tag {
+            background: #e3f2fd;
+            color: #1976d2;
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .register-btn {
+            width: 100%;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .register-btn:hover {
+            background: #218838;
+            transform: translateY(-2px);
+        }
+
+        .registered-section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .registered-item {
+            background: #e8f5e8;
+            border: 1px solid #28a745;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .registered-badge {
+            background: #28a745;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <button class="back-btn" onclick="showPopup('Going back to dashboard...'); setTimeout(() => window.history.back(), 1000);">
+                <i class="fas fa-arrow-left"></i> Back to Dashboard
+            </button>
+            <h1><i class="fas fa-laptop-code"></i> Explore Hackathons</h1>
+            <div></div>
+        </div>
+
+        <div class="hackathons-grid">
+            <div class="hackathon-card">
+                <div class="card-header">
+                    <div class="prize-badge">02 Aug 2025</div>
+                    <div class="card-title">R00TW4R CTF 2025</div>
+                    <div class="card-date">PSNA College of Engineering and Technology, Dindigul</div>
+                </div>
+                <div class="card-body">
+                    <p class="card-description">Capture The Flag competition focusing on cybersecurity challenges and ethical hacking skills.</p>
+                    <div class="card-features">
+                        <span class="feature-tag">Technical</span>
+                        <span class="feature-tag">Hackathon</span>
+                        <span class="feature-tag">CTF</span>
+                        <span class="feature-tag">Cybersecurity</span>
+                    </div>
+                    <button class="register-btn" onclick="showPopup('Redirecting to registration...'); window.open('https://psnatech.ac.in', '_blank')">Register Now</button>
+                </div>
+            </div>
+
+            <div class="hackathon-card">
+                <div class="card-header">
+                    <div class="prize-badge">06 Aug 2025</div>
+                    <div class="card-title">Prasidhi 25</div>
+                    <div class="card-date">Kongu Engineering College, Erode</div>
+                </div>
+                <div class="card-body">
+                    <p class="card-description">Technical hackathon showcasing innovative solutions and cutting-edge technology projects.</p>
+                    <div class="card-features">
+                        <span class="feature-tag">Technical</span>
+                        <span class="feature-tag">Hackathon</span>
+                        <span class="feature-tag">Innovation</span>
+                        <span class="feature-tag">Projects</span>
+                    </div>
+                    <button class="register-btn" onclick="showPopup('Redirecting to registration...'); window.open('https://kongu.edu', '_blank')">Register Now</button>
+                </div>
+            </div>
+
+            <div class="hackathon-card">
+                <div class="card-header">
+                    <div class="prize-badge">08 Aug 2025</div>
+                    <div class="card-title">VCET HACKATHON 2025</div>
+                    <div class="card-date">Velalar College of Engineering and Technology, Erode</div>
+                </div>
+                <div class="card-body">
+                    <p class="card-description">Annual hackathon event promoting collaborative problem-solving and technical excellence.</p>
+                    <div class="card-features">
+                        <span class="feature-tag">Hackathon</span>
+                        <span class="feature-tag">Collaboration</span>
+                        <span class="feature-tag">Problem Solving</span>
+                        <span class="feature-tag">Technical</span>
+                    </div>
+                    <button class="register-btn" onclick="showPopup('Redirecting to registration...'); window.open('https://vcet.ac.in', '_blank')">Register Now</button>
+                </div>
+            </div>
+
+            <div class="hackathon-card">
+                <div class="card-header">
+                    <div class="prize-badge">22 Aug 2025</div>
+                    <div class="card-title">National Level Project Competition 2025</div>
+                    <div class="card-date">Velammal Institute of Technology, Chennai</div>
+                </div>
+                <div class="card-body">
+                    <p class="card-description">National level competition for innovative technical projects with online course integration.</p>
+                    <div class="card-features">
+                        <span class="feature-tag">Technical</span>
+                        <span class="feature-tag">Hackathon</span>
+                        <span class="feature-tag">National Level</span>
+                        <span class="feature-tag">Online Courses</span>
+                    </div>
+                    <button class="register-btn" onclick="showPopup('Redirecting to registration...'); window.open('https://vit.ac.in', '_blank')">Register Now</button>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+    <script>
+        function showPopup(message) {
+            const popup = document.createElement('div');
+            popup.style.cssText = 'position: fixed; top: 20px; right: 20px; background: #333; color: white; padding: 15px 20px; border-radius: 8px; z-index: 1000; font-weight: 600; box-shadow: 0 4px 12px rgba(0,0,0,0.3);';
+            popup.textContent = message;
+            document.body.appendChild(popup);
+            setTimeout(() => popup.remove(), 3000);
+        }
+        
+        function registerHackathon(hackathonName) {
+            // Check localStorage for existing registrations
+            let registered = JSON.parse(localStorage.getItem('registeredHackathons') || '[]');
+            
+            if (registered.includes(hackathonName)) {
+                alert('You are already registered for this hackathon!');
+                return;
+            }
+            
+            // Add to localStorage
+            registered.push(hackathonName);
+            localStorage.setItem('registeredHackathons', JSON.stringify(registered));
+            
+            // Update UI
+            const registeredContainer = document.getElementById('registeredHackathons');
+            const noHackathonsMsg = registeredContainer.querySelector('p');
+            if (noHackathonsMsg && noHackathonsMsg.textContent.includes('No hackathons')) {
+                noHackathonsMsg.remove();
+            }
+            
+            const registeredItem = document.createElement('div');
+            registeredItem.className = 'registered-item';
+            registeredItem.innerHTML = `
+                <span style="font-weight: 600;">${hackathonName}</span>
+                <span class="registered-badge">Registered</span>
+            `;
+            
+            registeredContainer.appendChild(registeredItem);
+            alert(`Successfully registered for ${hackathonName}! View all your hackathons in My Hackathons page.`);
+        }
+    </script>
+</body>
+</html>

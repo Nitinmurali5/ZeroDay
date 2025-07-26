@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Test</title>
+</head>
+<body>
+    <h1>API Test Page</h1>
+    <div id="status"></div>
+    <div id="results"></div>
+    
+    <script src="js/api.js"></script>
+    <script>
+        async function testAPI() {
+            const statusDiv = document.getElementById('status');
+            const resultsDiv = document.getElementById('results');
+            
+            try {
+                statusDiv.innerHTML = 'Testing API connection...';
+                
+                // Test health check
+                const healthResponse = await fetch('/api/health');
+                const healthData = await healthResponse.json();
+                console.log('Health check:', healthData);
+                
+                // Test getting items
+                const api = window.lostFoundAPI;
+                const items = await api.getItems();
+                console.log('Items from API:', items);
+                
+                statusDiv.innerHTML = `
+                    <h2>✅ API Working!</h2>
+                    <p>Server: ${healthData.message}</p>
+                    <p>Items found: ${items.length}</p>
+                `;
+                
+                resultsDiv.innerHTML = `
+                    <h3>Recent Items:</h3>
+                    <pre>${JSON.stringify(items.slice(0, 3), null, 2)}</pre>
+                `;
+                
+            } catch (error) {
+                console.error('API Test failed:', error);
+                statusDiv.innerHTML = `
+                    <h2>❌ API Error</h2>
+                    <p>Error: ${error.message}</p>
+                `;
+            }
+        }
+        
+        // Run test when page loads
+        window.addEventListener('load', testAPI);
+    </script>
+</body>
+</html>

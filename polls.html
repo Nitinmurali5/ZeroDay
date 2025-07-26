@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Polls & Feedback - Eshwarites Management</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="polls.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📊 Polls & Feedback</h1>
+            <p>Participate in polls and provide feedback</p>
+        </header>
+
+        <!-- Login Form -->
+        <div id="loginSection" class="login-section">
+            <div class="login-form">
+                <h2>Eshwarites Login</h2>
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="userRole">I am a:</label>
+                        <select id="userRole" name="userRole" required>
+                            <option value="">Select your role</option>
+                            <option value="student">Student</option>
+                            <option value="admin">Administrator</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="username">Username:</label>
+                        <input type="text" id="username" name="username" 
+                               minlength="3" 
+                               maxlength="20" 
+                               pattern="[A-Za-z0-9_]+" 
+                               placeholder="Enter your username" 
+                               title="Username must be 3-20 characters (letters, numbers, underscore only)" 
+                               required>
+                        <small class="form-help">3-20 characters (letters, numbers, underscore only)</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password:</label>
+                        <input type="password" id="password" name="password" 
+                               minlength="6" 
+                               maxlength="30" 
+                               placeholder="Enter your password" 
+                               title="Password must be at least 6 characters" 
+                               required>
+                        <small class="form-help">Minimum 6 characters required</small>
+                    </div>
+                    <button type="submit">Login</button>
+                </form>
+                <div class="login-help">
+                    <p>🎓 <strong>Students:</strong> Vote on polls and view results</p>
+                    <p>👨‍💼 <strong>Administrators:</strong> Create and manage polls</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Admin Dashboard -->
+        <div id="adminDashboard" class="dashboard admin-dashboard" style="display: none;">
+            <div class="dashboard-header">
+                <h2>Admin Dashboard</h2>
+                <button id="logoutBtn" class="logout-btn">Logout</button>
+            </div>
+            
+            <div class="admin-content">
+                <div class="post-announcement">
+                    <h3>Create New Poll</h3>
+                    <form id="createPollForm">
+                        <div class="form-group">
+                            <label for="pollTitle">Poll Title:</label>
+                            <input type="text" id="pollTitle" name="pollTitle" required maxlength="100">
+                            <div class="char-counter">0/100</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="pollCategory">Category:</label>
+                            <select id="pollCategory" name="pollCategory" required>
+                                <option value="">Select Category</option>
+                                <option value="academic">Academic</option>
+                                <option value="events">Events</option>
+                                <option value="facilities">Facilities</option>
+                                <option value="feedback">Feedback</option>
+                                <option value="general">General</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="pollDescription">Description:</label>
+                            <textarea id="pollDescription" name="pollDescription" rows="3" maxlength="300"></textarea>
+                            <div class="char-counter">0/300</div>
+                        </div>
+                        <div class="form-group">
+                            <label>Poll Options:</label>
+                            <div id="pollOptions">
+                                <input type="text" class="poll-option" placeholder="Option 1" required>
+                                <input type="text" class="poll-option" placeholder="Option 2" required>
+                            </div>
+                            <button type="button" id="addOption" class="btn btn-secondary">+ Add Option</button>
+                        </div>
+                        <div class="form-group">
+                            <label for="pollEndDate">End Date:</label>
+                            <input type="datetime-local" id="pollEndDate" name="pollEndDate" required>
+                        </div>
+                        <button type="submit">Create Poll</button>
+                    </form>
+                </div>
+
+                <div class="manage-announcements">
+                    <h3>Manage Polls</h3>
+                    <div id="adminPollsList" class="announcements-list"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Student Dashboard -->
+        <div id="studentDashboard" class="dashboard student-dashboard" style="display: none;">
+            <div class="dashboard-header">
+                <h2>Welcome, <span id="studentName"></span>!</h2>
+                <button id="studentLogoutBtn" class="logout-btn">Logout</button>
+            </div>
+            
+            <div class="student-content">
+                <div class="filters">
+                    <h3>Filter Polls</h3>
+                    <div class="filter-controls">
+                        <select id="categoryFilter">
+                            <option value="">All Categories</option>
+                            <option value="academic">Academic</option>
+                            <option value="events">Events</option>
+                            <option value="facilities">Facilities</option>
+                            <option value="feedback">Feedback</option>
+                            <option value="general">General</option>
+                        </select>
+                        <select id="statusFilter">
+                            <option value="">All Polls</option>
+                            <option value="active">Active</option>
+                            <option value="ended">Ended</option>
+                        </select>
+                        <input type="text" id="searchFilter" placeholder="Search polls...">
+                    </div>
+                </div>
+
+                <div class="announcements-container">
+                    <h3>Available Polls</h3>
+                    <div id="studentPollsList" class="announcements-list"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Vote Modal -->
+    <div id="voteModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="voteModalTitle">Vote on Poll</h3>
+                <span class="close" onclick="closeVoteModal()">&times;</span>
+            </div>
+            <div id="voteModalContent">
+                <!-- Vote options will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Results Modal -->
+    <div id="resultsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="resultsModalTitle">Poll Results</h3>
+                <span class="close" onclick="closeResultsModal()">&times;</span>
+            </div>
+            <div id="resultsModalContent">
+                <!-- Results will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Home Access -->
+    <div style="position: fixed; bottom: 20px; right: 20px; z-index: 1000;">
+        <a href="home.html" style="display: flex; align-items: center; justify-content: center; width: 50px; height: 50px; background: #667eea; color: white; border-radius: 50%; text-decoration: none; font-size: 20px; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3); transition: all 0.3s ease;" onmouseover="this.style.background='#5a6fd8'; this.style.transform='translateY(-3px)'; this.style.boxShadow='0 6px 20px rgba(102, 126, 234, 0.4)'" onmouseout="this.style.background='#667eea'; this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(102, 126, 234, 0.3)'" title="Back to Home">
+            🏠
+        </a>
+    </div>
+
+    <script src="polls.js"></script>
+</body>
+</html>
